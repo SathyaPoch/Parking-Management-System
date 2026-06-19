@@ -18,7 +18,9 @@ public:
 
     Vehicle() = default;
 
-    Vehicle(string num, string type) : plateNumber(num), vehicleType(type) {
+    Vehicle(string num, string type) {
+        plateNumber = num;
+        vehicleType = type;
         if (type == "car") {
             carIdTracker++;
             ticketID = "TC" + to_string(carIdTracker);
@@ -40,7 +42,7 @@ struct Node {
 };
 
 class DoubleLinkedList {
-private:
+public:
     Node* head;
     Node* tail;
 
