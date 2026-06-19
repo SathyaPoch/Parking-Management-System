@@ -5,17 +5,17 @@ using namespace std;
 
 // TODO: add insert function (insert at the end) using double linked list
  void DoubleLinkedList::insertAtTheEnd(const Vehicle& a3){
-        Node* newNode = new Node(a3); 
+        Node* node = new Node(a3); 
 
         if (isEmpty()) {
             
-            head = newNode;
-            tail = newNode;
+            head = node;
+            tail = node;
         } else {
           
-            tail->next = newNode;
-            newNode->prev = tail;
-            tail = newNode; 
+            tail->next = node;
+            node->prev = tail;
+            tail = node; 
         }
 }
 
