@@ -6,27 +6,27 @@
 
 class Vehicle {
 public:
-    string plateNumber;
-    string vehicleType;
-    string ticketID;
-    string ticketDate;
+    std::string plateNumber;
+    std::string vehicleType;
+    std::string ticketID;
+    std::string ticketDate;
 
     static int carIdTracker;
     static int bikeIdTracker;
 
     Vehicle() = default;
 
-    Vehicle(string num, string type) {
+    Vehicle(std::string num, std::string type) {
         plateNumber = num;
         vehicleType = type;
         if (type == "car") {
             carIdTracker++;
-            ticketID = "TC" + to_string(carIdTracker);
+            ticketID = "TC" + std::to_string(carIdTracker);
         } else if (type == "motorbike") {
             bikeIdTracker++;
-            ticketID = "TB" + to_string(bikeIdTracker); 
+            ticketID = "TB" + std::to_string(bikeIdTracker); 
         } else {
-            cout << "Invalid! Only accept car and motorbike" << endl;
+            std::cout << "Invalid! Only accept car and motorbike" << std::endl;
         }
     }
 };
@@ -51,7 +51,9 @@ public:
         return head == nullptr;
     }
 
+    void deleteEnd();
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
+    
 };
 #endif

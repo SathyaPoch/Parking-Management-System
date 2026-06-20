@@ -1,7 +1,6 @@
 #include <iostream>
-#include "data_structure/linked_list.h"
+#include "linked_list.h"
 #include <fstream>
-using namespace std;
 
 // TODO: add insert function (insert at the end) using double linked list
  void DoubleLinkedList::insertAtTheEnd(const Vehicle& a3){
@@ -22,12 +21,29 @@ using namespace std;
 void DoubleLinkedList::displayList() {
     Node* node = head;
     while (node != NULL) {
-        cout << "Plate Number: " << node->data.plateNumber << std::endl;
-        cout << "Ticket : " << node->data.ticketID << endl;
-        cout << "Vehicle Type: " << node->data.vehicleType << endl;
+        std::cout << "Plate Number: " << node->data.plateNumber << std::endl;
+        std::cout << "Ticket : " << node->data.ticketID << std::endl;
+        std::cout << "Vehicle Type: " << node->data.vehicleType << std::endl;
      
         node = node->next;
     }
+}
+
+void DoubleLinkedList::deleteEnd(){
+    if(isEmpty()){
+        std::cout<<"List is empty. Nothing to delete."<< std::endl;
+        return;
+    }
+    Node* nodeToDelete = tail;
+    if(head = tail){
+        head = nullptr;
+        tail = nullptr;
+    }
+    else{
+        tail = tail->prev;
+        tail->next = nullptr;
+    }
+    delete nodeToDelete;
 }
  
    

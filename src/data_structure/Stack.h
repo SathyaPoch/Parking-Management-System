@@ -1,10 +1,10 @@
 #pragma once 
 #include <string>
+#include <linked_list.h>
 
 struct ActionRecord {
     std::string action_type;
-    std::string vehicle_type;
-    std::string plate_num;
+    Vehicle target_vehicle;
 };
 
 class Stack{

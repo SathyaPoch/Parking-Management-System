@@ -1,5 +1,6 @@
 #include <Stack.h>
 #include <iostream>
+#include <linked_list.h>
 
 Stack::Stack(){
     top == -1;
@@ -26,7 +27,7 @@ void Stack::push(ActionRecord action){
 ActionRecord Stack::pop(){
     if(is_empty){
         std::cout<<"Stack underflow\n"<<std::endl;
-        return{"none", "none", "none"};
+        return{"none"};
     }
     ActionRecord last_action = history_arr[top];
     top--;
