@@ -1,5 +1,6 @@
 #include <iostream>
 #include "data_structure/linked_list.h"
+#include "data_structure/Stack.h"
 #include <string>
 #include <ctime>
 #include <time.h>
@@ -50,6 +51,7 @@ int main(){
  int user_choice = 0;
  int parking_zone = 0;
  DoubleLinkedList list;
+ Stack stack;
  do{
     cout << "1. Get your ticket\n";
     cout << "2. Checking out\n";
@@ -68,16 +70,22 @@ int main(){
             cin >> type;
             cout << "Enter " << type << " Plate Number: ";
             cin >> plate;
-            Vehicle a2(plate, type);
-            cout << "Vehicle ticket ID: " << a2.ticketID << endl;
-            //TODO : insert ticket and platenum at the end of the list
-            Vehicle a3;
-            a3.plateNumber = plate;
-            a3.vehicleType = type;
-            a3.ticketID = a2.ticketID;
-            list.insertAtTheEnd(a3);
-            cout << "display double linked list \n";
+            Vehicle vehicle(plate, type);
+            cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
+            list.insertAtTheEnd(vehicle);
             list.displayList();
+            cout << "\n--- TICKET PRINTED ---\n";
+            cout<< "========================================\n";
+            cout << " Ticket ID : " << vehicle.ticketID << "\n";
+            cout << " Type      : " << vehicle.vehicleType << "\n";
+            cout << " Plate     : " << vehicle.plateNumber << "\n";
+            cout<< "========================================\n";
+            cout << "----------------------\n" << endl;
+            ActionRecord log;
+            log.action_type = "Park";
+            log.target_vehicle = vehicle;
+            stack.push(log);
+
             break;
         }
         case 2:

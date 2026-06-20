@@ -1,9 +1,9 @@
-#include <Stack.h>
+#include "Stack.h"
 #include <iostream>
-#include <linked_list.h>
+
 
 Stack::Stack(){
-    top == -1;
+    top = -1;
 }
 
 bool Stack::is_empty(){
@@ -25,9 +25,10 @@ void Stack::push(ActionRecord action){
 }
 
 ActionRecord Stack::pop(){
-    if(is_empty){
+    if(is_empty()){
         std::cout<<"Stack underflow\n"<<std::endl;
-        return{"none"};
+        Vehicle empty_car("none", "none");
+        return {"none", empty_car};;
     }
     ActionRecord last_action = history_arr[top];
     top--;
@@ -37,7 +38,8 @@ ActionRecord Stack::pop(){
 ActionRecord Stack::peek(){
     if(is_empty()){
         std::cout<<"Stack is empty\n"<<std::endl;
-        return;
+        Vehicle empty_car("none", "none");
+        return {"none", empty_car};;
     }
     return history_arr[top];
 }
