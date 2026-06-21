@@ -8,11 +8,11 @@ struct ActionRecord {
 };
 
 class Stack{
-    private: 
+private: 
     ActionRecord history_arr[100];
     int top;
 
-    public: 
+public: 
     Stack(); //Constructor
     void push(ActionRecord action); // push everything inside the struct 
     ActionRecord pop(); //remove 3 varibles 

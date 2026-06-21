@@ -6,10 +6,12 @@
 
 class Vehicle {
 public:
+    
     std::string plateNumber;
     std::string vehicleType;
     std::string ticketID;
     std::string ticketDate;
+    
 
     static int carIdTracker;
     static int bikeIdTracker;
@@ -44,8 +46,20 @@ public:
     Node* head;
     Node* tail;
 
+    int max_car;
+    int max_motor;
+    int current_car;
+    int current_motor;
+
 public:
-    DoubleLinkedList() : head(nullptr), tail(nullptr) {}
+    DoubleLinkedList(){
+        head = nullptr;
+        tail = nullptr;
+        max_car = 100;
+        max_motor = 200;
+        current_car = 0;
+        current_motor = 0;
+    }
 
     bool isEmpty() const {
         return head == nullptr;
@@ -54,6 +68,7 @@ public:
     void deleteEnd();
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
+    bool avaiable(std::string type);
     
 };
 #endif

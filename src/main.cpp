@@ -1,6 +1,7 @@
 #include <iostream>
 #include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
+#include "data_structure/queue.h"
 #include <string>
 #include <ctime>
 #include <time.h>
@@ -70,6 +71,7 @@ int main(){
             cin >> type;
             cout << "Enter " << type << " Plate Number: ";
             cin >> plate;
+           // if( ){ //if the spot avaiable 
             Vehicle vehicle(plate, type);
             cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
             list.insertAtTheEnd(vehicle);
@@ -85,7 +87,13 @@ int main(){
             log.action_type = "Park";
             log.target_vehicle = vehicle;
             stack.push(log);
-
+            //}else{}
+            cout << "\n Reminder: The "<< type << "parking zone is full.\n";
+            Vehicle waiting_vehicle(plate, type);
+            cout<<"Vechile"<<plate<<" has been added to the waiting line\n";
+            log.action_type = "Wait";
+            log.target_vehicle = waiting_vehicle;
+            stack.push(log);
             break;
         }
         case 2:
