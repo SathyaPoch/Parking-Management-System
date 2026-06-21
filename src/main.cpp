@@ -65,27 +65,31 @@ int main(){
     cin >> option;
     switch(option){
         case 1:{
-            string plate, type;
-            cout << "Enter The Vehicle Type: ";
-            cin >> type;
-            cout << "Enter " << type << " Plate Number: ";
-            cin >> plate;
-            Vehicle vehicle(plate, type);
-            cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
-            list.insertAtTheEnd(vehicle);
-            list.displayList();
-            cout << "\n--- TICKET PRINTED ---\n";
-            cout<< "========================================\n";
-            cout << " Ticket ID : " << vehicle.ticketID << "\n";
-            cout << " Type      : " << vehicle.vehicleType << "\n";
-            cout << " Plate     : " << vehicle.plateNumber << "\n";
-            cout<< "========================================\n";
-            cout << "----------------------\n" << endl;
-            ActionRecord log;
-            log.action_type = "Park";
-            log.target_vehicle = vehicle;
-            stack.push(log);
-
+            if (list.isFull()) {
+            cout << "\nSorry, the parking lot is FULL. No space available.\n";
+        // Phase 2 goes here later (waitlist via Queue)
+            } else {
+                string plate, type;
+                cout << "Enter The Vehicle Type: ";
+                cin >> type;
+                cout << "Enter " << type << " Plate Number: ";
+                cin >> plate;
+                Vehicle vehicle(plate, type);
+                cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
+                list.insertAtTheEnd(vehicle);
+                list.displayList();
+                cout << "\n--- TICKET PRINTED ---\n";
+                cout<< "========================================\n";
+                cout << " Ticket ID : " << vehicle.ticketID << "\n";
+                cout << " Type      : " << vehicle.vehicleType << "\n";
+                cout << " Plate     : " << vehicle.plateNumber << "\n";
+                cout<< "========================================\n";
+                cout << "----------------------\n" << endl;
+                ActionRecord log;
+                log.action_type = "Park";
+                log.target_vehicle = vehicle;
+                stack.push(log);
+            }
             break;
         }
         case 2:

@@ -43,9 +43,11 @@ class DoubleLinkedList {
 public:
     Node* head;
     Node* tail;
+    int vehicleCount;
+    int maxCapacity;
 
 public:
-    DoubleLinkedList() : head(nullptr), tail(nullptr) {}
+    DoubleLinkedList() : head(nullptr), tail(nullptr) , vehicleCount(0), maxCapacity(300) {}
 
     bool isEmpty() const {
         return head == nullptr;
@@ -54,6 +56,7 @@ public:
     void deleteEnd();
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
+    bool isFull();
     
 };
 #endif

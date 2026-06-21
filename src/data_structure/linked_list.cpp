@@ -16,6 +16,7 @@
             node->prev = tail;
             tail = node; 
         }
+        vehicleCount++;
 }
 
 void DoubleLinkedList::displayList() {
@@ -35,7 +36,7 @@ void DoubleLinkedList::deleteEnd(){
         return;
     }
     Node* nodeToDelete = tail;
-    if(head = tail){
+    if(head == tail){
         head = nullptr;
         tail = nullptr;
     }
@@ -44,6 +45,13 @@ void DoubleLinkedList::deleteEnd(){
         tail->next = nullptr;
     }
     delete nodeToDelete;
+    vehicleCount--;
 }
  
-   
+ bool DoubleLinkedList::isFull() {
+    if (vehicleCount >= maxCapacity) {
+        return true;
+    } else {
+        return false;
+    }
+}  
