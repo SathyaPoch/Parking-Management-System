@@ -48,11 +48,14 @@ public:
 };
 int main(){
  cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
+ DoubleLinkedList list;
+ Stack stack;
+ Queue car_queue;   // NEW: Separate line for cars
+ Queue bike_queue;
  int option = 0;
  int user_choice = 0;
  int parking_zone = 0;
- DoubleLinkedList list;
- Stack stack;
+
  do{
     cout << "1. Get your ticket\n";
     cout << "2. Checking out\n";
@@ -90,7 +93,12 @@ int main(){
             //}else{}
             cout << "\n Reminder: The "<< type << "parking zone is full.\n";
             Vehicle waiting_vehicle(plate, type);
-            cout<<"Vechile"<<plate<<" has been added to the waiting line\n";
+            if(type == "car"){
+                car_queue.enqueue(waiting_vehicle);
+            }else if(type == "motor"){
+                bike_queue.enqueue(waiting_vehicle);
+            }
+            cout<<type<<": "<<plate<<" has been added to the waiting line\n";
             log.action_type = "Wait";
             log.target_vehicle = waiting_vehicle;
             stack.push(log);
@@ -99,8 +107,30 @@ int main(){
         case 2:
         cout << "Are you sure you want to check out?(y/n) ";
             switch(user_choice){
-                case 'y':
-                cout<< "Not implemented yet.";
+                case 'y':{
+                string leave_plate, leave_type;
+                cout<<"Enter the type leaving vehicle:";
+                cin>>leave_type;
+                cout<<"Enter the plate number of the vehicle:";
+                cin>>leave_plate;
+
+                bool found = list.deleteEnd(leave_plate);
+                if(found == true){
+                    cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
+
+                    //record the action
+                    ActionRecord checkout;
+                    checkout.action_type="Checkout";
+                    Vehicle leaving(leave_plate, leave_type);
+                    checkout.target_vehicle= leaving;
+                    stack.push(checkout);
+
+                    // 
+                    
+                }else{
+                    cout<<"The Vehcile is not found!!!"<<endl;
+                }
+                }
                 case 'n':
                 cout<<"Cancelled Choice!";
                 break;
