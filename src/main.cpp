@@ -72,37 +72,42 @@ int main(){
             string plate, type;
             cout << "Enter The Vehicle Type: ";
             cin >> type;
-            cout << "Enter " << type << " Plate Number: ";
+            cout << "Enter " << type << " Plate Number(e.g. 2E-6806 ): ";
             cin >> plate;
-           // if( ){ //if the spot avaiable 
-            Vehicle vehicle(plate, type);
-            cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
-            list.insertAtTheEnd(vehicle);
-            list.displayList();
-            cout << "\n--- TICKET PRINTED ---\n";
-            cout<< "========================================\n";
-            cout << " Ticket ID : " << vehicle.ticketID << "\n";
-            cout << " Type      : " << vehicle.vehicleType << "\n";
-            cout << " Plate     : " << vehicle.plateNumber << "\n";
-            cout<< "========================================\n";
-            cout << "----------------------\n" << endl;
-            ActionRecord log;
-            log.action_type = "Park";
-            log.target_vehicle = vehicle;
-            stack.push(log);
-            //}else{}
-            cout << "\n Reminder: The "<< type << "parking zone is full.\n";
-            Vehicle waiting_vehicle(plate, type);
-            if(type == "car"){
-                car_queue.enqueue(waiting_vehicle);
-            }else if(type == "motor"){
-                bike_queue.enqueue(waiting_vehicle);
+            if(checkPlateValidation(plate)){
+                Vehicle vehicle(plate, type);
+                cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
+                list.insertAtTheEnd(vehicle);
+                list.displayList();
+                cout << "\n--- TICKET PRINTED ---\n";
+                cout<< "==============================)==========\n";
+                cout << " Ticket ID : " << vehicle.ticketID << "\n";
+                cout << " Type      : " << vehicle.vehicleType << "\n";
+                cout << " Plate     : " << vehicle.plateNumber << "\n";
+                cout<< "========================================\n";
+                cout << "----------------------\n" << endl;
+                ActionRecord log;
+                log.action_type = "Park";
+                log.target_vehicle = vehicle;
+                stack.push(log);
+                //}else{}
+                cout << "\n Reminder: The "<< type << "parking zone is full.\n";
+                Vehicle waiting_vehicle(plate, type);
+                if(type == "car"){
+                    car_queue.enqueue(waiting_vehicle);
+                }else if(type == "motor"){
+                    bike_queue.enqueue(waiting_vehicle);
+                }
+                cout<<type<<": "<<plate<<" has been added to the waiting line\n";
+                log.action_type = "Wait";
+                log.target_vehicle = waiting_vehicle;
+                stack.push(log);
+                break;
+            }else{
+                cout<< "Invalid plate number.";
             }
-            cout<<type<<": "<<plate<<" has been added to the waiting line\n";
-            log.action_type = "Wait";
-            log.target_vehicle = waiting_vehicle;
-            stack.push(log);
-            break;
+           // if( ){ //if the spot avaiable 
+         
         }
         case 2:
         cout << "Are you sure you want to check out?(y/n) ";
@@ -159,4 +164,29 @@ int main(){
 
 void displayTicketInfo() {
     cout << "";
+}
+bool checkPlateValidation(string plate) { 
+    if (plate.length() != 7) {
+        return false;
+    }
+    
+    if (plate[2] != '-') {
+        return false;
+    }
+    
+    if (!isalpha(static_cast<unsigned char>(plate[1]))) {
+        return false; 
+    }
+    
+    if (!isdigit(static_cast<unsigned char>(plate[0]))) {
+        return false;
+    }
+
+    for (int i = 3; i <= 6; i++) {
+        if (!isdigit(static_cast<unsigned char>(plate[i]))) {
+            return false;
+        }
+    }
+
+    return true; 
 }
