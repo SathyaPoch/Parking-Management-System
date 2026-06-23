@@ -65,7 +65,7 @@ public:
         return head == nullptr;
     }
 
-    void deleteEnd();
+    bool deleteVehiclePlate(std::string leave_plate);
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
     bool avaiable(std::string type);

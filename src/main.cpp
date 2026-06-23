@@ -114,7 +114,7 @@ int main(){
                 cout<<"Enter the plate number of the vehicle:";
                 cin>>leave_plate;
 
-                bool found = list.deleteEnd(leave_plate);
+                bool found = list.deleteVehiclePlate(leave_plate);
                 if(found == true){
                     cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
 

@@ -29,21 +29,37 @@ void DoubleLinkedList::displayList() {
     }
 }
 
-void DoubleLinkedList::deleteEnd(){
+bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
     if(isEmpty()){
         std::cout<<"List is empty. Nothing to delete."<< std::endl;
-        return;
+        return false;
     }
-    Node* nodeToDelete = tail;
-    if(head = tail){
-        head = nullptr;
-        tail = nullptr;
+    //TODO : traverse the list to look for the liscense plate to delete
+    Node* current = head;
+   while(current != NULL){
+    if(current->data.plateNumber == leave_plate){
+        if(current == head && tail){
+            head = NULL;
+            tail = NULL;
+        }else if (current == head){
+                head = current->next;
+                if (head != nullptr) {
+                    head->prev = nullptr;
+                }
+        }else if (current == tail){
+            tail = tail->prev;
+            tail->next = NULL;
+        }else{
+            //if it's in the middle of the list
+             current->prev->next = current->next;
+             current->next->prev = current->prev;
+        }
+        delete current;
+        return true; 
     }
-    else{
-        tail = tail->prev;
-        tail->next = nullptr;
-    }
-    delete nodeToDelete;
+        current = current->next;
+   }
+   return false;
 }
  
    
