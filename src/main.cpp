@@ -8,6 +8,7 @@
 #include <cctype>
 using namespace std;
 
+bool checkPlateValidation(string plate);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
 
