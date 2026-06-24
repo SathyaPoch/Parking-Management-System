@@ -76,6 +76,7 @@ int main(){
             cout << "Enter " << type << " Plate Number(e.g. car:2E-6806, motor:1E-6806 ): ";
             cin >> plate;
             if(checkPlateValidation(plate, type)){
+                if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
@@ -91,7 +92,7 @@ int main(){
                 log.action_type = "Park";
                 log.target_vehicle = vehicle;
                 stack.push(log);
-                //}else{}
+                }else{
                 cout << "\n Reminder: The "<< type << "parking zone is full.\n";
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
@@ -99,16 +100,16 @@ int main(){
                 }else if(type == "motor"){
                     bike_queue.enqueue(waiting_vehicle);
                 }
+                ActionRecord log;
                 cout<<type<<": "<<plate<<" has been added to the waiting line\n";
                 log.action_type = "Wait";
                 log.target_vehicle = waiting_vehicle;
                 stack.push(log);
                 break;
+                }
             }else{
                 cout<< "Invalid plate number.";
             }
-           // if( ){ //if the spot avaiable 
-         
         }
         case 2:
         cout << "Are you sure you want to check out?(y/n) ";
