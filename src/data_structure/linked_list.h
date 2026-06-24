@@ -69,6 +69,7 @@ public:
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
     bool available(std::string type);
+    bool writeIO(std::string vehicleType);
     
 };
 #endif

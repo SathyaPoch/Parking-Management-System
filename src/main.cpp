@@ -6,6 +6,7 @@
 #include <ctime>
 #include <time.h>
 #include <cctype>
+#include <cstdlib>
 using namespace std;
 bool available(string type);
 bool checkPlateValidation(string plate, string type);
@@ -154,13 +155,14 @@ int main(){
         }
         case 5:{
             break;
-        }    
-        case 6:{
+        case 6:
+            break;   
+        case 7:
+        cout << "Clearing current page...";
+         std::system("cls");
             break;
         }    
-        case 7:{
-            break;
-        }  
+        
         case 8:{
             cout << "Quitting...";
             break;
