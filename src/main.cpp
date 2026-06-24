@@ -6,11 +6,14 @@
 #include <ctime>
 #include <time.h>
 #include <cctype>
+#include "sorting.h"
 using namespace std;
 
 bool checkPlateValidation(string plate);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
+Vehicle history[600];
+int historyCount = 0;
 
 class Ticket {
 public:

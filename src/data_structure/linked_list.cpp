@@ -16,6 +16,11 @@
             node->prev = tail;
             tail = node; 
         }
+
+        if (a3.vehicleType == "car") 
+        current_car++;
+        else if (a3.vehicleType == "motorbike") 
+        current_motor++;
 }
 
 void DoubleLinkedList::displayList() {
@@ -54,6 +59,10 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
              current->prev->next = current->next;
              current->next->prev = current->prev;
         }
+        if (current->data.vehicleType == "car") 
+        current_car--;
+        else if (current->data.vehicleType == "motorbike") 
+        current_motor--;
         delete current;
         return true; 
     }
@@ -62,4 +71,10 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
    return false;
 }
  
-   
+bool DoubleLinkedList::avaiable(std::string type) {
+    if (type == "car") {
+        return current_car < max_car;
+    } else {
+        return current_motor < max_motor;
+    }
+}   
