@@ -20,6 +20,6 @@ class HashMap{
         ~HashMap();
         
         void insert(std::string key, std::string value);
-        string search(std::string key);
+        std::string search(std::string key);
         void remove(std::string key);
 };
