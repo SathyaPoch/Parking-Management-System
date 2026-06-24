@@ -49,7 +49,6 @@ public:
     int full;
 };
 int main(){
- cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
  DoubleLinkedList list;
  Stack stack;
  Queue car_queue;   // NEW: Separate line for cars
@@ -59,7 +58,8 @@ int main(){
  int parking_zone = 0;
 
  do{
-    cout << "\n1. Get your ticket\n";
+    cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
+    cout << "\n1. Get your ticket";
     cout << "2. Checking out\n";
     cout << "3. Search for Vehicles Information\n";
     cout << "4. Check Vehicle Zone Availability\n";
@@ -81,10 +81,10 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
-                 if( type == "car" || type == "Car" ){
-                        list.writeIO("cars.csv");
-                    }else if (type == "motorbike" || type == "Motorbike"){
-                        list.writeIO("cars.csv");
+                 if(type == "car"){
+                        list.writeIO("car");
+                    }else if (type == "motor"){
+                        list.writeIO("motor");
                     }else{
                         std::cout<< "Invalid!";
                     }
@@ -119,18 +119,10 @@ int main(){
             }
             break;
         }
-<<<<<<< HEAD
-        case 2:{
-        cout << "Are you sure you want to check out?(y/n) ";
-            cin>>user_choice;
-            switch(user_choice){
-                case 'y':{
-=======
         case 2: {
             cout << "Are you sure you want to check out? (y/n): ";
             cin >> user_choice;
             if (user_choice == 'y' || user_choice == 'Y') {
->>>>>>> c4dec330d2c21005d82acc2fbf6a47f983613126
                 string leave_plate, leave_type;
                 cout << "Enter the type leaving vehicle: ";
                 cin >> leave_type;
@@ -149,48 +141,37 @@ int main(){
                 }else{
                     cout << "The Vehicle is not found!!!" << endl;
                 }
-<<<<<<< HEAD
-                    break;
-                }
-                case 'n':
-                cout<<"Cancelled Choice!";
-                break;
-            }
-            break;
-        }
-        case 3:{
-=======
             } else {
                 cout << "Cancelled Choice!";
             }
             break;
         }
-        case 3:
->>>>>>> c4dec330d2c21005d82acc2fbf6a47f983613126
+        case 3:{    
             break;
-        }    
+        }
         case 4:{
             break;
         }
         case 5:{
             break;
-        case 6:
-            break;   
-        case 7:
-        cout << "Clearing current page...";
-         std::system("cls");
+        }
+        case 6: {
             break;
-        }    
-        
+        }
+        case 7:{
+            cout << "Clearing current page...";
+            std::system("cls");
+            break;
+        }
         case 8:{
             cout << "Quitting...";
             break;
-        }    
-        default :{
+        }
+        default:{
             cout << "Invalid Option";
-            break;  
-        }  
-   }
+            break;
+        }
+    }
 }while(option !=8);
     return 0;
 }
@@ -219,7 +200,7 @@ bool checkPlateValidation(string plate, string type) {
         return false;
     }
 
-    if ((type == "motor" || type == "motorbike") && plate[0] != '1') {
+    if (type == "motor" && plate[0] != '1') {
         return false;
     }
 
