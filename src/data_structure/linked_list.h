@@ -24,7 +24,7 @@ public:
         if (type == "car") {
             carIdTracker++;
             ticketID = "TC" + std::to_string(carIdTracker);
-        } else if (type == "motorbike") {
+        } else if (type == "motor") {
             bikeIdTracker++;
             ticketID = "TB" + std::to_string(bikeIdTracker); 
         } else {

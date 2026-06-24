@@ -19,7 +19,7 @@
         //add the capacity
         if (a3.vehicleType == "car") {
             current_car++;
-        } else if (a3.vehicleType == "motorbike") {
+        } else if (a3.vehicleType == "motor") {
             current_motor++;
         }
 }
@@ -44,7 +44,7 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
     Node* current = head;
    while(current != NULL){
     if(current->data.plateNumber == leave_plate){
-        if(current == head && tail){
+        if(current == head && current == tail){
             head = NULL;
             tail = NULL;
         }else if (current == head){
@@ -63,7 +63,7 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
         //remove the capacity 
         if (current->data.vehicleType == "car") {
                 current_car--;
-            } else if (current->data.vehicleType == "motorbike") {
+            } else if (current->data.vehicleType == "motor") {
                 current_motor--;
             }
 
@@ -83,7 +83,7 @@ bool DoubleLinkedList::available(std::string type){
             return false;
         }
     }
-    if(type == "bike"){
+    if(type == "motor"){
         if(current_motor < max_motor){
             return true;
         }else{
@@ -94,16 +94,16 @@ bool DoubleLinkedList::available(std::string type){
 }
 bool DoubleLinkedList::writeIO(std::string vehicleType) {
     std::ofstream csv;
-    if(vehicleType == "car" || "Car" ){
+    if(vehicleType == "car"){
         csv.open("data/cars.csv");
-    }else if (vehicleType == "motorbike" || "Motorbike"){
-        csv.open("data/motorbike.csv");
+    }else if (vehicleType == "motor"){
+        csv.open("data/motorbikes.csv");
     }else{
         std::cout<< "Invalid!";
     }
     
     csv << "plateNumber ,ticketID , vehicleType";
-    Node* current = tail;
+    Node* current = head;
     while(current != NULL){
     csv << current->data.vehicleType;    
     csv << current->data.plateNumber;
