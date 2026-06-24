@@ -8,7 +8,7 @@
 #include <cctype>
 using namespace std;
 
-bool checkPlateValidation(string plate);
+bool checkPlateValidation(string plate, string type);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
 
@@ -73,9 +73,9 @@ int main(){
             string plate, type;
             cout << "Enter The Vehicle Type: ";
             cin >> type;
-            cout << "Enter " << type << " Plate Number(e.g. 2E-6806 ): ";
+            cout << "Enter " << type << " Plate Number(e.g. car:2E-6806, motor:1E-6806 ): ";
             cin >> plate;
-            if(checkPlateValidation(plate)){
+            if(checkPlateValidation(plate, type)){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
@@ -166,7 +166,7 @@ int main(){
 void displayTicketInfo() {
     cout << "";
 }
-bool checkPlateValidation(string plate) { 
+bool checkPlateValidation(string plate, string type) { 
     if (plate.length() != 7) {
         return false;
     }
@@ -180,6 +180,14 @@ bool checkPlateValidation(string plate) {
     }
     
     if (!isdigit(static_cast<unsigned char>(plate[0]))) {
+        return false;
+    }
+
+    if (type == "car" && plate[0] != '2') {
+        return false;
+    }
+
+    if ((type == "motor" || type == "motorbike") && plate[0] != '1') {
         return false;
     }
 

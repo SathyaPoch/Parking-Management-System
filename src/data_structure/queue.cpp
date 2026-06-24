@@ -54,7 +54,8 @@ Vehicle Queue::dequeue(){
 }
 
 Vehicle Queue::peek_front(){
- if(isEmpty()){
-    return Q[front];
+ if(!isEmpty()){
+     return Q[front];
  }
+ return Vehicle("none","none");
 }

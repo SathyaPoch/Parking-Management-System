@@ -68,7 +68,7 @@ public:
     bool deleteVehiclePlate(std::string leave_plate);
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
-    bool avaiable(std::string type);
+    bool available(std::string type);
     
 };
 #endif

@@ -61,5 +61,14 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
    }
    return false;
 }
+
+bool DoubleLinkedList::available(std::string type){
+    if(current_car>=max_car){
+        return false;
+    }
+    if(current_motor>=max_motor){
+        return false;
+    }
+}
  
    
