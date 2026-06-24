@@ -12,7 +12,7 @@ bool available(string type);
 bool checkPlateValidation(string plate, string type);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
-
+bool writeIO(string vehicleType);
 class Ticket {
 public:
     int ticketID;
@@ -81,6 +81,13 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
+                 if( type == "car" || "Car" ){
+                        list.writeIO("cars.csv");
+                    }else if (type == "motorbike" || "Motorbike"){
+                        list.writeIO("cars.csv");
+                    }else{
+                        std::cout<< "Invalid!";
+                    }
                 list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
                 cout<< "==============================)==========\n";
