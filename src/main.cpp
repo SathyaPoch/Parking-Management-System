@@ -59,7 +59,7 @@ int main(){
 
  do{
     cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
-    cout << "\n1. Get your ticket";
+    cout << "\n1. Get your ticket\n";
     cout << "2. Checking out\n";
     cout << "3. Search for Vehicles Information\n";
     cout << "4. Check Vehicle Zone Availability\n";
@@ -81,16 +81,9 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
-                 if(type == "car"){
-                        list.writeIO("car");
-                    }else if (type == "motor"){
-                        list.writeIO("motor");
-                    }else{
-                        std::cout<< "Invalid!";
-                    }
                 list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
-                cout<< "==============================)==========\n";
+                cout<< "========================================\n";
                 cout << " Ticket ID : " << vehicle.ticketID << "\n";
                 cout << " Type      : " << vehicle.vehicleType << "\n";
                 cout << " Plate     : " << vehicle.plateNumber << "\n";
@@ -159,8 +152,9 @@ int main(){
             break;
         }
         case 7:{
-            cout << "Clearing current page...";
+            cout << "Clearing current page...\n";
             std::system("cls");
+            std::system("clear");
             break;
         }
         case 8:{
