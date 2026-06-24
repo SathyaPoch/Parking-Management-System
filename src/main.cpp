@@ -55,11 +55,11 @@ int main(){
  Queue car_queue;   // NEW: Separate line for cars
  Queue bike_queue;
  int option = 0;
- int user_choice = 0;
+ char user_choice = 'n';
  int parking_zone = 0;
 
  do{
-    cout << "1. Get your ticket\n";
+    cout << "\n1. Get your ticket\n";
     cout << "2. Checking out\n";
     cout << "3. Search for Vehicles Information\n";
     cout << "4. Check Vehicle Zone Availability\n";
@@ -81,9 +81,9 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
-                 if( type == "car" || "Car" ){
+                 if( type == "car" || type == "Car" ){
                         list.writeIO("cars.csv");
-                    }else if (type == "motorbike" || "Motorbike"){
+                    }else if (type == "motorbike" || type == "Motorbike"){
                         list.writeIO("cars.csv");
                     }else{
                         std::cout<< "Invalid!";
@@ -113,44 +113,39 @@ int main(){
                 log.action_type = "Wait";
                 log.target_vehicle = waiting_vehicle;
                 stack.push(log);
-                break;
                 }
             }else{
                 cout<< "Invalid plate number.";
             }
+            break;
         }
-        case 2:
-        cout << "Are you sure you want to check out?(y/n) ";
-            switch(user_choice){
-                case 'y':{
+        case 2: {
+            cout << "Are you sure you want to check out? (y/n): ";
+            cin >> user_choice;
+            if (user_choice == 'y' || user_choice == 'Y') {
                 string leave_plate, leave_type;
-                cout<<"Enter the type leaving vehicle:";
-                cin>>leave_type;
-                cout<<"Enter the plate number of the vehicle:";
-                cin>>leave_plate;
+                cout << "Enter the type leaving vehicle: ";
+                cin >> leave_type;
+                cout << "Enter the plate number of the vehicle: ";
+                cin >> leave_plate;
 
                 bool found = list.deleteVehiclePlate(leave_plate);
                 if(found == true){
                     cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
 
-                    //record the action
                     ActionRecord checkout;
-                    checkout.action_type="Checkout";
+                    checkout.action_type = "Checkout";
                     Vehicle leaving(leave_plate, leave_type);
-                    checkout.target_vehicle= leaving;
+                    checkout.target_vehicle = leaving;
                     stack.push(checkout);
-
-                    // 
-                    
                 }else{
-                    cout<<"The Vehcile is not found!!!"<<endl;
+                    cout << "The Vehicle is not found!!!" << endl;
                 }
-                }
-                case 'n':
-                cout<<"Cancelled Choice!";
-                break;
+            } else {
+                cout << "Cancelled Choice!";
             }
             break;
+        }
         case 3:
             break;
         case 4:
