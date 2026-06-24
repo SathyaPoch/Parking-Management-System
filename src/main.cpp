@@ -7,7 +7,7 @@
 #include <time.h>
 #include <cctype>
 using namespace std;
-
+bool available(string type);
 bool checkPlateValidation(string plate, string type);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
@@ -105,14 +105,15 @@ int main(){
                 log.action_type = "Wait";
                 log.target_vehicle = waiting_vehicle;
                 stack.push(log);
-                break;
                 }
             }else{
                 cout<< "Invalid plate number.";
             }
+            break;
         }
-        case 2:
+        case 2:{
         cout << "Are you sure you want to check out?(y/n) ";
+            cin>>user_choice;
             switch(user_choice){
                 case 'y':{
                 string leave_plate, leave_type;
@@ -137,28 +138,37 @@ int main(){
                 }else{
                     cout<<"The Vehcile is not found!!!"<<endl;
                 }
+                    break;
                 }
                 case 'n':
                 cout<<"Cancelled Choice!";
                 break;
             }
             break;
-        case 3:
+        }
+        case 3:{
             break;
-        case 4:
+        }    
+        case 4:{
             break;
-        case 5:
+        }
+        case 5:{
             break;
-        case 6:
-            break;   
-        case 7:
+        }    
+        case 6:{
             break;
-        case 8:
+        }    
+        case 7:{
+            break;
+        }  
+        case 8:{
             cout << "Quitting...";
-            break;    
-        default :
+            break;
+        }    
+        default :{
             cout << "Invalid Option";
-            break;    
+            break;  
+        }  
    }
 }while(option !=8);
     return 0;
