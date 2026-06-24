@@ -30,7 +30,7 @@ int HashMap::hashFunction(string key) {
 
     for (int j = 0; j < key.length(); j++) {
         if (isdigit(key[j])) {
-            num_sum = num_sum*10 + (key[j] - '0') % TABLE_SIZE; //make sure 001 and 010 won't end up in the same bucket and module for shorter string
+            num_sum = (num_sum*10 + (key[j] - '0')) % TABLE_SIZE; //make sure 001 and 010 won't end up in the same bucket and module for shorter string
         }
     }
 
