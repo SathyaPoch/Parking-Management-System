@@ -1,7 +1,7 @@
 #include <iostream>
 #include "linked_list.h"
 #include <fstream>
-
+#include <iostream>
 // TODO: add insert function (insert at the end) using double linked list
  void DoubleLinkedList::insertAtTheEnd(const Vehicle& a3){
         Node* node = new Node(a3); 
@@ -92,5 +92,25 @@ bool DoubleLinkedList::available(std::string type){
     }
     return false; 
 }
- 
+bool DoubleLinkedList::writeIO(std::string vehicleType) {
+    std::ofstream csv;
+    if(vehicleType == "car" || "Car" ){
+        csv.open("data/cars.csv");
+    }else if (vehicleType == "motorbike" || "Motorbike"){
+        csv.open("data/motorbike.csv");
+    }else{
+        std::cout<< "Invalid!";
+    }
+    
+    csv << "plateNumber ,ticketID , vehicleType";
+    Node* current = tail;
+    while(current != NULL){
+    csv << current->data.vehicleType;    
+    csv << current->data.plateNumber;
+    csv << current->data.ticketDate;
+    current = current->next;
+   }
+    csv.close();
+    return true;
+} 
    
