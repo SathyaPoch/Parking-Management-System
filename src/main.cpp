@@ -98,7 +98,7 @@ int main(){
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
                     car_queue.enqueue(waiting_vehicle);
-                }else if(type == "motor"){
+                }else if(type == "motor" || "motorbike"){
                     bike_queue.enqueue(waiting_vehicle);
                 }
                 ActionRecord log;

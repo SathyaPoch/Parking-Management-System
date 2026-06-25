@@ -84,7 +84,7 @@ bool DoubleLinkedList::available(std::string type){
             return false;
         }
     }
-    if(type == "motor"){
+    if(type == "motor" || "motorbike" || "moto"){
         if(current_motor < max_motor){
             return true;
         }else{
@@ -96,9 +96,9 @@ bool DoubleLinkedList::available(std::string type){
 bool DoubleLinkedList::writeIO(std::string vehicleType) {
     std::ofstream csv;
     if(vehicleType == "car"){
-        csv.open("./data/cars.csv");
+        csv.open("src/data/cars.csv");
     } else if (vehicleType == "motor"){
-        csv.open("./data/motorbike.csv");
+        csv.open("src/data/motorbike.csv");
     } else {
         std::cout << "Invalid";
         return false;
