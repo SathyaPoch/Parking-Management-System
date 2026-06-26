@@ -2,22 +2,17 @@
 #include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
 #include "data_structure/queue.h"
-#include "algorithm/sorting.h"
 #include <string>
 #include <ctime>
 #include <time.h>
 #include <cctype>
 #include <cstdlib>
 using namespace std;
-
 bool available(string type);
 bool checkPlateValidation(string plate, string type);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
-Vehicle history[600];
-int historyCount = 0;
 bool writeIO(string vehicleType);
-
 class Ticket {
 public:
     int ticketID;
@@ -85,8 +80,6 @@ int main(){
             if(checkPlateValidation(plate, type)){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
-                vehicle.entryTimestamp = (long)time(0);
-                vehicle.status = "parked";
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
                 list.displayList();
@@ -130,20 +123,6 @@ int main(){
                 cout << "Enter the plate number of the vehicle: ";
                 cin >> leave_plate;
 
-                Node* curr = list.head;
-                while (curr != NULL)
-                {
-                    if (curr->data.plateNumber == leave_plate)
-                    {
-                        curr->data.exitTimestamp = (long)time(0);
-                        curr->data.status = "left";
-                        history[historyCount] = curr->data;
-                        historyCount++;
-                        break;
-                    }
-                    curr = curr->next;
-                }
-
                 bool found = list.deleteVehiclePlate(leave_plate);
                 if(found == true){
                     cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
@@ -162,72 +141,40 @@ int main(){
             break;
         }
         case 3:{    
-            ActionRecord last_action = stack.peek();
-            if(last_action.action_type == "Park"){
-                list.deleteVehiclePlate(last_action.target_vehicle.plateNumber);
-            }else if(last_action.action_type == "Checkout"){
-                list.deleteVehiclePlate(last_action.target_vehicle.plateNumber);
-            }else if(last_action.action_type == "Wait"){
-                list.deleteVehiclePlate(last_action.target_vehicle.plateNumber);
-            }else{
-                cout<< " No Action To Undo\n";
+            cout<<"-------- Undo Previous Action ---------\n";
+            if(stack.is_empty()){
+                cout<<"History is empty\n";
+                cout<<"~~~~~~~~~~~~~~~~~~~~~~\n";
+                break;
             }
-            stack.pop();
-            list.displayList();
-            cout << "Undo Action Success\n";
-            cout << "----------------------\n" << endl;
+
+            ActionRecord Undo = stack.pop();
+            string action = Undo.action_type;
+            Vehicle v = Undo.target_vehicle;
+
+            if(action =="Park"){
+                list.deleteVehiclePlate(v.plateNumber);
+                cout << "Deleted:" << v.plateNumber<< "from the parking lot"<< endl;
+            }
+            else if(action =="Checkout"){
+                list.insertAtTheEnd(v);
+                cout << "Restored:" << v.plateNumber<< "to the parking lot"<< endl;
+            }
+            else if(action =="Wait"){
+                if(v.vehicleType == "car"){
+                    car_queue.enqueue(v);
+                }else if(v.vehicleType == "motor"){
+                    bike_queue.enqueue(v);
+                }
+                cout << "Restored:" << v.plateNumber<< "to the waiting line"<< endl;
+            }
+            cout<<"----------------------------\n";
             break;
         }
         case 4:{
             break;
         }
         case 5:{
-            Vehicle temp[600];
-            int total = 0;
-
-            // copy checked out vehicles from history
-            for (int i = 0; i < historyCount; i++)
-            {
-                temp[total] = history[i];
-                total++;
-            }
-
-            // copy currently parked vehicles from linked list
-            Node *curr = list.head;
-            while (curr != NULL)
-            {
-                temp[total] = curr->data;
-                total++;
-                curr = curr->next;
-            }
-
-            if (total == 0)
-            {
-                cout << "No records yet." << endl;
-                break;
-            }
-
-            cout << "\nSort by:\n";
-            cout << "1. Entry time (earliest first)\n";
-            cout << "2. Duration (longest first)\n";
-            cout << "3. Status (parked or left)\n";
-            cout << "Choose: ";
-            int sortChoice;
-            cin >> sortChoice;
-
-            if (sortChoice == 1)
-                mergeSort(temp, 0, total - 1, "entry");
-            else if (sortChoice == 2)
-                mergeSort(temp, 0, total - 1, "duration");
-            else if (sortChoice == 3)
-                mergeSort(temp, 0, total - 1, "status");
-            else
-            {
-                cout << "Invalid choice." << endl;
-                break;
-            }
-
-            displaySorted(temp, total);
             break;
         }
         case 6: {
