@@ -40,15 +40,14 @@ void DoubleLinkedList::displayList() {
     }
 }
 
-bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
+bool DoubleLinkedList::deleteByID(std::string leaveID){
     if(isEmpty()){
         std::cout<<"List is empty. Nothing to delete."<< std::endl;
         return false;
     }
-    //TODO : traverse the list to look for the liscense plate to delete
     Node* current = head;
    while(current != NULL){
-    if(current->data.plateNumber == leave_plate){
+    if(current->data.ticketID == leaveID){
         if(current == head && current == tail){
             head = NULL;
             tail = NULL;
@@ -78,6 +77,17 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
         current = current->next;
    }
    return false;
+}
+
+Vehicle* DoubleLinkedList::findByID(std::string ticketID) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->data.ticketID == ticketID) {
+            return &current->data;
+        }
+        current = current->next;
+    }
+    return nullptr;
 }
 
 bool DoubleLinkedList::available(std::string type){

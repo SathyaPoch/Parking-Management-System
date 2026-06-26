@@ -135,22 +135,21 @@ int main(){
             cout << "Are you sure you want to check out? (y/n): ";
             cin >> user_choice;
             if (user_choice == 'y' || user_choice == 'Y') {
-                string leave_plate, leave_type;
-                cout << "Enter the type leaving vehicle: ";
-                cin >> leave_type;
-                cout << "Enter the plate number of the vehicle: ";
-                cin >> leave_plate;
+                string ticketID;
+                cout << "Enter the TicketID of the vehicle (e.g. TC1, TB2): ";
+                cin >> ticketID;
 
-                bool found = list.deleteVehiclePlate(leave_plate);
-                if(found == true){
-                    cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
+                Vehicle* found_vehicle = list.findByID(ticketID);
+                if (found_vehicle != nullptr) {
+                    Vehicle leaving = *found_vehicle;  // save a copy before deleting
+                    list.deleteByID(ticketID);
+                    cout << "\nVehicle " << leaving.plateNumber << " checked out successfully.\n";
 
                     ActionRecord checkout;
                     checkout.action_type = "Checkout";
-                    Vehicle leaving(leave_plate, leave_type);
                     checkout.target_vehicle = leaving;
                     stack.push(checkout);
-                }else{
+                } else {
                     cout << "The Vehicle is not found!!!" << endl;
                 }
             } else {
@@ -171,8 +170,8 @@ int main(){
             Vehicle v = Undo.target_vehicle;
 
             if(action =="Park"){
-                list.deleteVehiclePlate(v.plateNumber);
-                cout << "Deleted:" << v.plateNumber<< "from the parking lot"<< endl;
+                list.deleteByID(v.ticketID);
+                cout << "Deleted:" << v.plateNumber << " from the parking lot" << endl;
             }
             else if(action =="Checkout"){
                 list.insertAtTheEnd(v);
