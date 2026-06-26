@@ -82,6 +82,7 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
+                // list.writeIO(a3.vehicleType);
                 list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
                 cout<< "========================================\n";

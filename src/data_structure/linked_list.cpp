@@ -22,8 +22,11 @@
         } else if (a3.vehicleType == "motor") {
             current_motor++;
         }
-        writeIO(a3.vehicleType);
+        writeIO(a3);
+      
 }
+        
+
 
 void DoubleLinkedList::displayList() {
     Node* node = head;
@@ -93,27 +96,20 @@ bool DoubleLinkedList::available(std::string type){
     }
     return false; 
 }
-bool DoubleLinkedList::writeIO(std::string vehicleType) {
+bool DoubleLinkedList::writeIO(const Vehicle& vehicle) {
     std::ofstream csv;
-    if(vehicleType == "car"){
-        csv.open("src/data/cars.csv");
-    } else if (vehicleType == "motor"){
-        csv.open("src/data/motorbike.csv");
-    } else {
-        std::cout << "Invalid";
+    if (vehicle.vehicleType == "car")
+        csv.open("src/data/cars.csv", std::ios::app);
+    else if (vehicle.vehicleType == "motor")
+        csv.open("src/data/motorbike.csv", std::ios::app);
+    else
         return false;
-    }
 
-    csv << "plateNumber,ticketID,vehicleType\n";
-    Node* current = head;
-    while(current != NULL) {
-        if(current->data.vehicleType == vehicleType) {
-            csv << current->data.plateNumber << ','
-                << current->data.ticketID << ','
-                << current->data.vehicleType << '\n';
-        }
-        current = current->next;
-    }
-    csv.close();
+    if (!csv.is_open()) return false;
+
+    csv << vehicle.plateNumber << ','
+        << vehicle.ticketID << ','
+        << vehicle.vehicleType << '\n';
     return true;
+    
 }
