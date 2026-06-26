@@ -31,6 +31,7 @@
 void DoubleLinkedList::displayList() {
     Node* node = head;
     while (node != NULL) {
+        //std::cout << "TickeyID: "<< node->data.ticketID <<"\t ||| \t " << "Vehicle Type: "<< node->data.vehicleType <<"\t ||| \t " << "Plate Number: "<<node->data.plateNumber<<std::endl;
         std::cout << "Plate Number: " << node->data.plateNumber << std::endl;
         std::cout << "Ticket : " << node->data.ticketID << std::endl;
         std::cout << "Vehicle Type: " << node->data.vehicleType << std::endl;
@@ -87,7 +88,7 @@ bool DoubleLinkedList::available(std::string type){
             return false;
         }
     }
-    if(type == "motor" || "motorbike" || "moto"){
+    if(type == "motor"){
         if(current_motor < max_motor){
             return true;
         }else{

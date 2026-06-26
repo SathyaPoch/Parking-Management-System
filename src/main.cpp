@@ -102,18 +102,28 @@ int main(){
                 log.target_vehicle = vehicle;
                 stack.push(log);
                 }else{
-                cout << "\n Reminder: The "<< type << "parking zone is full.\n";
+                cout << "\n Reminder: The "<< type << " parking zone is full.\n";
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
                     car_queue.enqueue(waiting_vehicle);
                 }else if(type == "motor" || "motorbike"){
                     bike_queue.enqueue(waiting_vehicle);
                 }
-                ActionRecord log;
                 cout<<type<<": "<<plate<<" has been added to the waiting line\n";
+                
+                ActionRecord log;
                 log.action_type = "Wait";
                 log.target_vehicle = waiting_vehicle;
                 stack.push(log);
+                cout<<"Do you want to view the Waitline? (y/n): ";
+                cin>>user_choice;
+                if(user_choice == 'y' || user_choice == 'Y'){
+                    car_queue.displayQueue();
+                    bike_queue.displayQueue();
+                }
+                else{
+                    break;
+                }
                 }
             }else{
                 cout<< "Invalid plate number. Please enter the checking information again\n";
@@ -185,6 +195,14 @@ int main(){
         }
         case 5:{
             cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
+            cout<<"~~~~~~~~ CAR ZONE ~~~~~~~~~\n";
+            cout<<"Current Car: "<<list.current_car<< " ||| The Maximum Car: " <<list.max_car<<endl;
+            //display the car.csv
+            cout<<endl;
+            cout<<"~~~~~~~~ MOTOR ZONE ~~~~~~~~~\n";
+            cout<<"Current Motor: "<<list.current_motor<< " ||| The Maximum Motor: " <<list.max_motor<<endl;
+            //display the motorbike.csv
+            cout<<endl;
             break;
         }
         case 6: {
@@ -192,16 +210,13 @@ int main(){
             break;
         }
         case 7:{
-            cout << "Clearing current page...\n";
-            std::system("cls");
-            std::system("clear");
             break;
         }
         case 8:{
             cout<<"--------------------------------------------------\n";
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout<<"Successfully cleared page"<<endl;
+            cout << "Clearing current page...\n";
+            std::system("cls");
+            std::system("clear");
             cout<<"--------------------------------------------------\n";
             break;
         }

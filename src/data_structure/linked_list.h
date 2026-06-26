@@ -30,7 +30,7 @@ public:
         if (type == "car") {
             carIdTracker++;
             ticketID = "TC" + std::to_string(carIdTracker);
-        } else if (type == "motor" || "motorbike" || "moto") {
+        } else if (type == "motor") {
             bikeIdTracker++;
             ticketID = "TB" + std::to_string(bikeIdTracker); 
         } else {
@@ -61,7 +61,7 @@ public:
     DoubleLinkedList(){
         head = nullptr;
         tail = nullptr;
-        max_car = 100;
+        max_car = 10;
         max_motor = 200;
         current_car = 0;
         current_motor = 0;

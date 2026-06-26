@@ -59,3 +59,15 @@ Vehicle Queue::peek_front(){
  }
  return Vehicle("none","none");
 }
+
+void Queue::displayQueue(){
+    if(isEmpty()){
+        std::cout<<"The Waiting line is empty for  "<<Q[front].vehicleType<<" \n";
+        return;    
+    }
+    std::cout<<"The Waiting Line for "<< Q[front].vehicleType <<": \n";
+    for(int i = front; i <= rear; i = (i + 1) % SIZE){
+        std::cout<<i+1<<". "<<"Plate Number: "<<Q[i].plateNumber<<std::endl;
+    }
+    std::cout<<"=======================================\n";
+}
