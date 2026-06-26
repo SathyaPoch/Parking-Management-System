@@ -139,19 +139,14 @@ int main(){
                 cout << "Enter the TicketID of the vehicle (e.g. TC1, TB2): ";
                 cin >> ticketID;
 
-                Vehicle* found_vehicle = list.findByID(ticketID);
-                if (found_vehicle != nullptr) {
-                    Vehicle leaving = *found_vehicle;  // save a copy before deleting
-                    list.deleteByID(ticketID);
-                    cout << "\nVehicle " << leaving.plateNumber << " checked out successfully.\n";
+                // ================================================================
+                // TODO (Hash Map): 
+                //   1. Use hashMap.getPlate(ticketID) to get the plate number
+                //   2. Use the plate/vehicle info to call list.deleteByID(ticketID)
+                //   3. Store the removed vehicle in ActionRecord for undo (case 3)
+                // ================================================================
+                cout << "[ Hash Map not implemented yet — checkout pending ]\n";
 
-                    ActionRecord checkout;
-                    checkout.action_type = "Checkout";
-                    checkout.target_vehicle = leaving;
-                    stack.push(checkout);
-                } else {
-                    cout << "The Vehicle is not found!!!" << endl;
-                }
             } else {
                 cout << "Cancelled Choice!";
             }

@@ -79,16 +79,7 @@ bool DoubleLinkedList::deleteByID(std::string leaveID){
    return false;
 }
 
-Vehicle* DoubleLinkedList::findByID(std::string ticketID) {
-    Node* current = head;
-    while (current != nullptr) {
-        if (current->data.ticketID == ticketID) {
-            return &current->data;
-        }
-        current = current->next;
-    }
-    return nullptr;
-}
+
 
 bool DoubleLinkedList::available(std::string type){
     if(type == "car"){

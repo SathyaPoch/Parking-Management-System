@@ -72,8 +72,6 @@ public:
     }
 
     bool deleteByID(std::string ticketID);
-    // TODO: Replace findByID with hashMap.getPlate(ticketID) once hash map is implemented
-    Vehicle* findByID(std::string ticketID);
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
     bool available(std::string type);
