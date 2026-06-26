@@ -11,7 +11,10 @@ public:
     std::string vehicleType;
     std::string ticketID;
     std::string ticketDate;
-    
+    std::string status;
+
+    long entryTimestamp;
+    long exitTimestamp;
 
     static int carIdTracker;
     static int bikeIdTracker;
@@ -21,6 +24,9 @@ public:
     Vehicle(std::string num, std::string type) {
         plateNumber = num;
         vehicleType = type;
+        status = "parked";
+        entryTimestamp = 0;
+        exitTimestamp = 0;
         if (type == "car") {
             carIdTracker++;
             ticketID = "TC" + std::to_string(carIdTracker);
