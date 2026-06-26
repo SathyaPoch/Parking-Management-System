@@ -75,7 +75,7 @@ public:
     void insertAtTheEnd(const Vehicle& a3);
     void displayList();
     bool available(std::string type);
-    bool writeIO(std::string vehicleType);
+    bool writeIO(const Vehicle& vehicle);
     
 };
 #endif
