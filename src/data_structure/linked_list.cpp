@@ -96,9 +96,9 @@ bool DoubleLinkedList::available(std::string type){
 bool DoubleLinkedList::writeIO(std::string vehicleType) {
     std::ofstream csv;
     if(vehicleType == "car"){
-        csv.open("src/data/cars.csv");
+        csv.open("src/data/cars.csv")std::endl;
     } else if (vehicleType == "motor"){
-        csv.open("src/data/motorbike.csv");
+        csv.open("src/data/motorbike.csv")std::endl;
     } else {
         std::cout << "Invalid";
         return false;
@@ -111,9 +111,10 @@ bool DoubleLinkedList::writeIO(std::string vehicleType) {
             csv << current->data.plateNumber << ','
                 << current->data.ticketID << ','
                 << current->data.vehicleType << '\n';
+            csv.close();
         }
         current = current->next;
     }
-    csv.close();
+    
     return true;
 }

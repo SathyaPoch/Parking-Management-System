@@ -58,7 +58,7 @@ int main(){
  int parking_zone = 0;
 
  do{
-    cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
+    cout<< "\nWELCOME TO PARKING MANAGEMENT SYSTEM\n";
     cout << "\n1. Get your ticket\n";
     cout << "2. Checking out\n";
     cout << "3. Undo previous action \n";
@@ -73,10 +73,16 @@ int main(){
     switch(option){
         case 1:{
             string plate, type;
+            park:
             cout << "Enter The Vehicle Type: ";
             cin >> type;
-            cout << "Enter " << type << " Plate Number(e.g. car:2E-6806, motor:1E-6806 ): ";
-            cin >> plate;
+            if(type == "car"){
+                cout<<"Enter Car Plate Number(e.g. 2E-6806): ";
+                cin>>plate;
+            }else if(type == "motor"){
+                cout<<"Enter Motor Plate Number(e.g. 1E-6806): ";
+                cin>>plate;
+            }
             if(checkPlateValidation(plate, type)){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
@@ -109,7 +115,8 @@ int main(){
                 stack.push(log);
                 }
             }else{
-                cout<< "Invalid plate number.";
+                cout<< "Invalid plate number. Please enter the checking information again\n";
+                goto park;
             }
             break;
         }
@@ -172,12 +179,15 @@ int main(){
             break;
         }
         case 4:{
+            cout<<"--------------- Search for Vehicles Information ----------------\n";
             break;
         }
         case 5:{
+            cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
             break;
         }
         case 6: {
+            cout<<"---------------- Sort by Date and Duration ----------------\n";
             break;
         }
         case 7:{
@@ -187,10 +197,15 @@ int main(){
             break;
         }
         case 8:{
-            cout << "Quitting...";
+            cout<<"--------------------------------------------------\n";
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout<<"Successfully cleared page"<<endl;
+            cout<<"--------------------------------------------------\n";
             break;
         }
         case 9:{
+            cout<<"Quitting...";
             break;
         }
         default:{
