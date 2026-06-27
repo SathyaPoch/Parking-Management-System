@@ -242,6 +242,52 @@ int main(){
             break;
         }
         case 5:{
+            Vehicle temp[600];
+            int total = 0;
+
+            
+            for (int i = 0; i < historyCount; i++)
+            {
+                temp[total] = history[i];
+                total++;
+            }
+
+            
+            Node *curr = list.head;
+            while (curr != NULL)
+            {
+                temp[total] = curr->data;
+                total++;
+                curr = curr->next;
+            }
+
+            if (total == 0)
+            {
+                cout << "No records yet." << endl;
+                break;
+            }
+
+            cout << "\nSort by:\n";
+            cout << "1. Entry time (earliest first)\n";
+            cout << "2. Duration (longest first)\n";
+            cout << "3. Status (parked or left)\n";
+            cout << "Choose: ";
+            int sortChoice;
+            cin >> sortChoice;
+
+            if (sortChoice == 1)
+                mergeSort(temp, 0, total - 1, "entry");
+            else if (sortChoice == 2)
+                mergeSort(temp, 0, total - 1, "duration");
+            else if (sortChoice == 3)
+                mergeSort(temp, 0, total - 1, "status");
+            else
+            {
+                cout << "Invalid choice." << endl;
+                break;
+            }
+
+            displaySorted(temp, total);
             break;
         }
         case 6: {
