@@ -170,14 +170,14 @@ int main(){
             Vehicle temp[600];
             int total = 0;
 
-            // copy checked out vehicles from history
+            
             for (int i = 0; i < historyCount; i++)
             {
                 temp[total] = history[i];
                 total++;
             }
 
-            // copy currently parked vehicles from linked list
+            
             Node *curr = list.head;
             while (curr != NULL)
             {
