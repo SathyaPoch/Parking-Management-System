@@ -2,22 +2,17 @@
 #include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
 #include "data_structure/queue.h"
-#include "algorithm/sorting.h"
 #include <string>
 #include <ctime>
 #include <time.h>
 #include <cctype>
 #include <cstdlib>
 using namespace std;
-
 bool available(string type);
 bool checkPlateValidation(string plate, string type);
 int Vehicle::carIdTracker = 0;
 int Vehicle::bikeIdTracker = 0;
-Vehicle history[600];
-int historyCount = 0;
 bool writeIO(string vehicleType);
-
 class Ticket {
 public:
     int ticketID;
@@ -63,31 +58,37 @@ int main(){
  int parking_zone = 0;
 
  do{
-    cout<< "WELCOME TO PARKING MANAGEMENT SYSTEM\n";
+    cout<< "\nWELCOME TO PARKING MANAGEMENT SYSTEM\n";
     cout << "\n1. Get your ticket\n";
     cout << "2. Checking out\n";
-    cout << "3. Search for Vehicles Information\n";
-    cout << "4. Check Vehicle Zone Availability\n";
-    cout << "5. Sort by date and durations\n";
-    cout << "6. Check Revenue\n";
-    cout << "7. Clear Page\n"; 
-    cout << "8. Quit\n";
+    cout << "3. Undo previous action \n";
+    cout << "4. Search for Vehicles Information\n";
+    cout << "5. Check Vehicle Zone Availability\n";
+    cout << "6. Sort by date and durations\n";
+    cout << "7. Check Revenue\n";
+    cout << "8. Clear Page\n"; 
+    cout << "9. Quit\n";
     cout << "Enter your option : ";
     cin >> option;
     switch(option){
         case 1:{
             string plate, type;
+            park:
             cout << "Enter The Vehicle Type: ";
             cin >> type;
-            cout << "Enter " << type << " Plate Number(e.g. car:2E-6806, motor:1E-6806 ): ";
-            cin >> plate;
+            if(type == "car"){
+                cout<<"Enter Car Plate Number(e.g. 2E-6806): ";
+                cin>>plate;
+            }else if(type == "motor"){
+                cout<<"Enter Motor Plate Number(e.g. 1E-6806): ";
+                cin>>plate;
+            }
             if(checkPlateValidation(plate, type)){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
-                vehicle.entryTimestamp = (long)time(0);
-                vehicle.status = "parked";
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
+                // list.writeIO(a3.vehicleType);
                 list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
                 cout<< "========================================\n";
@@ -101,21 +102,32 @@ int main(){
                 log.target_vehicle = vehicle;
                 stack.push(log);
                 }else{
-                cout << "\n Reminder: The "<< type << "parking zone is full.\n";
+                cout << "\n Reminder: The "<< type << " parking zone is full.\n";
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
                     car_queue.enqueue(waiting_vehicle);
                 }else if(type == "motor" || "motorbike"){
                     bike_queue.enqueue(waiting_vehicle);
                 }
-                ActionRecord log;
                 cout<<type<<": "<<plate<<" has been added to the waiting line\n";
+                
+                ActionRecord log;
                 log.action_type = "Wait";
                 log.target_vehicle = waiting_vehicle;
                 stack.push(log);
+                cout<<"Do you want to view the Waitline? (y/n): ";
+                cin>>user_choice;
+                if(user_choice == 'y' || user_choice == 'Y'){
+                    car_queue.displayQueue();
+                    bike_queue.displayQueue();
+                }
+                else{
+                    break;
+                }
                 }
             }else{
-                cout<< "Invalid plate number.";
+                cout<< "Invalid plate number. Please enter the checking information again\n";
+                goto park;
             }
             break;
         }
@@ -123,47 +135,56 @@ int main(){
             cout << "Are you sure you want to check out? (y/n): ";
             cin >> user_choice;
             if (user_choice == 'y' || user_choice == 'Y') {
-                string leave_plate, leave_type;
-                cout << "Enter the type leaving vehicle: ";
-                cin >> leave_type;
-                cout << "Enter the plate number of the vehicle: ";
-                cin >> leave_plate;
+                string ticketID;
+                cout << "Enter the TicketID of the vehicle (e.g. TC1, TB2): ";
+                cin >> ticketID;
 
-                Node* curr = list.head;
-                while (curr != NULL)
-                {
-                    if (curr->data.plateNumber == leave_plate)
-                    {
-                        curr->data.exitTimestamp = (long)time(0);
-                        curr->data.status = "left";
-                        history[historyCount] = curr->data;
-                        historyCount++;
-                        break;
-                    }
-                    curr = curr->next;
-                }
+                // ================================================================
+                // TODO (Hash Map): 
+                //   1. Use hashMap.getPlate(ticketID) to get the plate number
+                //   2. Use the plate/vehicle info to call list.deleteByID(ticketID)
+                //   3. Store the removed vehicle in ActionRecord for undo (case 3)
+                // ================================================================
+                cout << "[ Hash Map not implemented yet — checkout pending ]\n";
 
-                bool found = list.deleteVehiclePlate(leave_plate);
-                if(found == true){
-                    cout << "\nVehicle " << leave_plate << " checked out successfully.\n";
-
-                    ActionRecord checkout;
-                    checkout.action_type = "Checkout";
-                    Vehicle leaving(leave_plate, leave_type);
-                    checkout.target_vehicle = leaving;
-                    stack.push(checkout);
-                }else{
-                    cout << "The Vehicle is not found!!!" << endl;
-                }
             } else {
                 cout << "Cancelled Choice!";
             }
             break;
         }
         case 3:{    
+            cout<<"-------- Undo Previous Action ---------\n";
+            if(stack.is_empty()){
+                cout<<"History is empty\n";
+                cout<<"~~~~~~~~~~~~~~~~~~~~~~\n";
+                break;
+            }
+
+            ActionRecord Undo = stack.pop();
+            string action = Undo.action_type;
+            Vehicle v = Undo.target_vehicle;
+
+            if(action =="Park"){
+                list.deleteByID(v.ticketID);
+                cout << "Deleted:" << v.plateNumber << " from the parking lot" << endl;
+            }
+            else if(action =="Checkout"){
+                list.insertAtTheEnd(v);
+                cout << "Restored:" << v.plateNumber<< "to the parking lot"<< endl;
+            }
+            else if(action =="Wait"){
+                if(v.vehicleType == "car"){
+                    car_queue.enqueue(v);
+                }else if(v.vehicleType == "motor"){
+                    bike_queue.enqueue(v);
+                }
+                cout << "Restored:" << v.plateNumber<< "to the waiting line"<< endl;
+            }
+            cout<<"----------------------------\n";
             break;
         }
         case 4:{
+            cout<<"--------------- Search for Vehicles Information ----------------\n";
             break;
         }
         case 5:{
@@ -216,24 +237,32 @@ int main(){
             break;
         }
         case 6: {
+            cout<<"---------------- Sort by Date and Duration ----------------\n";
             break;
         }
         case 7:{
-            cout << "Clearing current page...\n";
-            std::system("cls");
-            std::system("clear");
             break;
         }
         case 8:{
-            cout << "Quitting...";
+            cout<<"--------------------------------------------------\n";
+            cout << "Clearing current page...\n";
+            std::system("cls");
+            std::system("clear");
+            cout<<"--------------------------------------------------\n";
+            break;
+        }
+        case 9:{
+            cout<<"Quitting...";
             break;
         }
         default:{
             cout << "Invalid Option";
+            cin.clear();
+            cin.ignore(1000, '\n');
             break;
         }
     }
-}while(option !=8);
+}while(option !=9);
     return 0;
 }
 

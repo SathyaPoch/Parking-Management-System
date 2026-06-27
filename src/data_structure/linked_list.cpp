@@ -22,12 +22,16 @@
         } else if (a3.vehicleType == "motor") {
             current_motor++;
         }
-        writeIO(a3.vehicleType);
+        writeIO(a3);
+      
 }
+        
+
 
 void DoubleLinkedList::displayList() {
     Node* node = head;
     while (node != NULL) {
+        //std::cout << "TickeyID: "<< node->data.ticketID <<"\t ||| \t " << "Vehicle Type: "<< node->data.vehicleType <<"\t ||| \t " << "Plate Number: "<<node->data.plateNumber<<std::endl;
         std::cout << "Plate Number: " << node->data.plateNumber << std::endl;
         std::cout << "Ticket : " << node->data.ticketID << std::endl;
         std::cout << "Vehicle Type: " << node->data.vehicleType << std::endl;
@@ -36,15 +40,14 @@ void DoubleLinkedList::displayList() {
     }
 }
 
-bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
+bool DoubleLinkedList::deleteByID(std::string leaveID){
     if(isEmpty()){
         std::cout<<"List is empty. Nothing to delete."<< std::endl;
         return false;
     }
-    //TODO : traverse the list to look for the liscense plate to delete
     Node* current = head;
    while(current != NULL){
-    if(current->data.plateNumber == leave_plate){
+    if(current->data.ticketID == leaveID){
         if(current == head && current == tail){
             head = NULL;
             tail = NULL;
@@ -76,6 +79,8 @@ bool DoubleLinkedList::deleteVehiclePlate( std:: string leave_plate){
    return false;
 }
 
+
+
 bool DoubleLinkedList::available(std::string type){
     if(type == "car"){
         if(current_car<max_car){
@@ -84,7 +89,7 @@ bool DoubleLinkedList::available(std::string type){
             return false;
         }
     }
-    if(type == "motor" || "motorbike" || "moto"){
+    if(type == "motor"){
         if(current_motor < max_motor){
             return true;
         }else{
@@ -93,27 +98,20 @@ bool DoubleLinkedList::available(std::string type){
     }
     return false; 
 }
-bool DoubleLinkedList::writeIO(std::string vehicleType) {
+bool DoubleLinkedList::writeIO(const Vehicle& vehicle) {
     std::ofstream csv;
-    if(vehicleType == "car"){
-        csv.open("src/data/cars.csv");
-    } else if (vehicleType == "motor"){
-        csv.open("src/data/motorbike.csv");
-    } else {
-        std::cout << "Invalid";
+    if (vehicle.vehicleType == "car")
+        csv.open("src/data/cars.csv", std::ios::app);
+    else if (vehicle.vehicleType == "motor")
+        csv.open("src/data/motorbike.csv", std::ios::app);
+    else
         return false;
-    }
 
-    csv << "plateNumber,ticketID,vehicleType\n";
-    Node* current = head;
-    while(current != NULL) {
-        if(current->data.vehicleType == vehicleType) {
-            csv << current->data.plateNumber << ','
-                << current->data.ticketID << ','
-                << current->data.vehicleType << '\n';
-        }
-        current = current->next;
-    }
-    csv.close();
+    if (!csv.is_open()) return false;
+
+    csv << vehicle.plateNumber << ','
+        << vehicle.ticketID << ','
+        << vehicle.vehicleType << '\n';
     return true;
+    
 }

@@ -19,5 +19,6 @@ public:
     bool isEmpty();
     bool isFull();
     void remove_last_veh(std::string plate);
+    void displayQueue();
 
 };
