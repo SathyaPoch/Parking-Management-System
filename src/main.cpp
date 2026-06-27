@@ -242,15 +242,29 @@ int main(){
             break;
         }
         case 5:{
+             cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
+            cout<<"~~~~~~~~ CAR ZONE ~~~~~~~~~\n";
+            cout<<"Current Car: "<<list.current_car<< " ||| The Maximum Car: " <<list.max_car<<endl;
+            //display the car.csv
+            cout<<endl;
+            cout<<"~~~~~~~~ MOTOR ZONE ~~~~~~~~~\n";
+            cout<<"Current Motor: "<<list.current_motor<< " ||| The Maximum Motor: " <<list.max_motor<<endl;
+            //display the motorbike.csv
+            cout<<endl;
+
+            break;
+        }
+        case 6: {
+            cout<<"---------------- Sort by Date and Duration ----------------\n";
             Vehicle temp[600];
             int total = 0;
 
             
-            for (int i = 0; i < historyCount; i++)
-            {
-                temp[total] = history[i];
-                total++;
-            }
+            // for (int i = 0; i < historyCount; i++)
+            // {
+            //     temp[total] = history[i];
+            //     total++;
+            // }
 
             
             Node *curr = list.head;
@@ -290,10 +304,6 @@ int main(){
             displaySorted(temp, total);
             break;
         }
-        case 6: {
-            cout<<"---------------- Sort by Date and Duration ----------------\n";
-            break;
-        }
         case 7:{
             break;
         }
@@ -301,7 +311,6 @@ int main(){
             cout<<"--------------------------------------------------\n";
             cout << "Clearing current page...\n";
             std::system("cls");
-            std::system("clear");
             cout<<"--------------------------------------------------\n";
             break;
         }
