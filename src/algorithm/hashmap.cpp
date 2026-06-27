@@ -2,7 +2,6 @@
 #include <string>
 #include <cctype>
 using namespace std;
-#include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
 #include "hashmap.h"
 
