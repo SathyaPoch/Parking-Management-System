@@ -9,74 +9,72 @@ long getDuration(Vehicle v) {
     return (end - v.entryTimestamp) / 60;
 }
 
-void mergeByEntry(Vehicle arr[], int l, int m, int r) {
-    int s1 = m - l + 1;
-    int s2 = r - m;
-    Vehicle left[300], right[300];
+void mergeByEntry(Vehicle arr[], int left, int middle, int right) {
+    int s1 = middle - left + 1;
+    int s2 = right - middle;
+    Vehicle leftPart[300], rightPart[300];
 
-    for (int i = 0; i < s1; i++) left[i] = arr[l + i];
-    for (int j = 0; j < s2; j++) right[j] = arr[m + 1 + j];
+    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
+    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
 
-    int i = 0, j = 0, k = l;
+    int i = 0, j = 0, k = left;
     while (i < s1 && j < s2) {
-        if (left[i].entryTimestamp <= right[j].entryTimestamp)
-            arr[k++] = left[i++];
+        if (leftPart[i].entryTimestamp <= rightPart[j].entryTimestamp)
+            arr[k++] = leftPart[i++];
         else
-            arr[k++] = right[j++];
+            arr[k++] = rightPart[j++];
     }
-    while (i < s1) arr[k++] = left[i++];
-    while (j < s2) arr[k++] = right[j++];
+    while (i < s1) arr[k++] = leftPart[i++];
+    while (j < s2) arr[k++] = rightPart[j++];
 }
 
-void mergeByDuration(Vehicle arr[], int l, int m, int r) {
-    int s1 = m - l + 1;
-    int s2 = r - m;
-    Vehicle left[300], right[300];
+void mergeByDuration(Vehicle arr[], int left, int middle, int right) {
+    int s1 = middle - left + 1;
+    int s2 = right - middle;
+    Vehicle leftPart[300], rightPart[300];
 
-    for (int i = 0; i < s1; i++) left[i] = arr[l + i];
-    for (int j = 0; j < s2; j++) right[j] = arr[m + 1 + j];
+    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
+    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
 
-   
-    int i = 0, j = 0, k = l;
+    int i = 0, j = 0, k = left;
     while (i < s1 && j < s2) {
-        if (getDuration(left[i]) >= getDuration(right[j]))
-            arr[k++] = left[i++];
+        if (getDuration(leftPart[i]) >= getDuration(rightPart[j]))
+            arr[k++] = leftPart[i++];
         else
-            arr[k++] = right[j++];
+            arr[k++] = rightPart[j++];
     }
-    while (i < s1) arr[k++] = left[i++];
-    while (j < s2) arr[k++] = right[j++];
+    while (i < s1) arr[k++] = leftPart[i++];
+    while (j < s2) arr[k++] = rightPart[j++];
 }
 
-void mergeByStatus(Vehicle arr[], int l, int m, int r) {
-    int s1 = m - l + 1;
-    int s2 = r - m;
-    Vehicle left[300], right[300];
+void mergeByStatus(Vehicle arr[], int left, int middle, int right) {
+    int s1 = middle - left + 1;
+    int s2 = right - middle;
+    Vehicle leftPart[300], rightPart[300];
 
-    for (int i = 0; i < s1; i++) left[i] = arr[l + i];
-    for (int j = 0; j < s2; j++) right[j] = arr[m + 1 + j];
+    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
+    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
 
-    
-    int i = 0, j = 0, k = l;
+    int i = 0, j = 0, k = left;
     while (i < s1 && j < s2) {
-        if (left[i].status <= right[j].status)
-            arr[k++] = left[i++];
+        if (leftPart[i].status <= rightPart[j].status)
+            arr[k++] = leftPart[i++];
         else
-            arr[k++] = right[j++];
+            arr[k++] = rightPart[j++];
     }
-    while (i < s1) arr[k++] = left[i++];
-    while (j < s2) arr[k++] = right[j++];
+    while (i < s1) arr[k++] = leftPart[i++];
+    while (j < s2) arr[k++] = rightPart[j++];
 }
 
-void mergeSort(Vehicle arr[], int l, int r, string mode) {
-    if (l >= r) return;
-    int m = (l + r) / 2;
-    mergeSort(arr, l, m, mode);
-    mergeSort(arr, m + 1, r, mode);
+void mergeSort(Vehicle arr[], int left, int right, string mode) {
+    if (left >= right) return;
+    int middle = (left + right) / 2;
+    mergeSort(arr, left, middle, mode);
+    mergeSort(arr, middle + 1, right, mode);
 
-    if (mode == "entry") mergeByEntry(arr, l, m, r);
-    else if (mode == "duration") mergeByDuration(arr, l, m, r);
-    else if (mode == "status") mergeByStatus(arr, l, m, r);
+    if (mode == "entry") mergeByEntry(arr, left, middle, right);
+    else if (mode == "duration") mergeByDuration(arr, left, middle, right);
+    else if (mode == "status") mergeByStatus(arr, left, middle, right);
 }
 
 void displaySorted(Vehicle arr[], int size) {

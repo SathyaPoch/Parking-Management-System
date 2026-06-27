@@ -2,6 +2,8 @@
 #include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
 #include "data_structure/queue.h"
+#include "algorithm/hashmap.h"
+#include "algorithm/sorting.h"
 #include <string>
 #include <ctime>
 #include <time.h>
@@ -53,6 +55,8 @@ int main(){
  Stack stack;
  Queue car_queue;   // NEW: Separate line for cars
  Queue bike_queue;
+ HashMap plateMap;
+ HashMap ticketMap;
  int option = 0;
  char user_choice = 'n';
  int parking_zone = 0;
@@ -88,6 +92,8 @@ int main(){
                 Vehicle vehicle(plate, type);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 list.insertAtTheEnd(vehicle);
+                plateMap.insert(vehicle.plateNumber, vehicle.ticketID);
+                ticketMap.insert(vehicle.ticketID, vehicle.plateNumber);
                 // list.writeIO(a3.vehicleType);
                 list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
@@ -136,16 +142,31 @@ int main(){
             cin >> user_choice;
             if (user_choice == 'y' || user_choice == 'Y') {
                 string ticketID;
+                string plateNumber; 
                 cout << "Enter the TicketID of the vehicle (e.g. TC1, TB2): ";
                 cin >> ticketID;
+                cout << "Enter the plate number of the vehicle: ";
+                cin >> plateNumber;
 
-                // ================================================================
-                // TODO (Hash Map): 
-                //   1. Use hashMap.getPlate(ticketID) to get the plate number
-                //   2. Use the plate/vehicle info to call list.deleteByID(ticketID)
-                //   3. Store the removed vehicle in ActionRecord for undo (case 3)
-                // ================================================================
-                cout << "[ Hash Map not implemented yet — checkout pending ]\n";
+                string plateStored = ticketMap.search(ticketID);
+                string ticketIDStored = plateMap.search(plateNumber);
+
+                if (ticketID == ticketIDStored && plateNumber == plateStored) {
+                    cout << "Checked out successfully" << endl;
+                    plateMap.remove(plateNumber);
+                    ticketMap.remove(ticketID);
+                    list.deleteByID(ticketID);
+
+                    ActionRecord log;
+                    log.action_type = "Checkout";
+                    log.target_vehicle.ticketID = ticketID;
+                    log.target_vehicle.plateNumber = plateNumber;
+                    stack.push(log);
+                } else if (ticketID != ticketIDStored || plateNumber != plateStored) {
+                    cout << "Invalid ticket ID or plate number" << endl;
+                } else {
+                    cout << "Something went wrong." << endl;
+                }
 
             } else {
                 cout << "Cancelled Choice!";
@@ -166,10 +187,14 @@ int main(){
 
             if(action =="Park"){
                 list.deleteByID(v.ticketID);
+                plateMap.remove(v.plateNumber);
+                ticketMap.remove(v.ticketID);
                 cout << "Deleted:" << v.plateNumber << " from the parking lot" << endl;
             }
             else if(action =="Checkout"){
                 list.insertAtTheEnd(v);
+                plateMap.insert(v.plateNumber, v.ticketID);
+                ticketMap.insert(v.ticketID, v.plateNumber);
                 cout << "Restored:" << v.plateNumber<< "to the parking lot"<< endl;
             }
             else if(action =="Wait"){
@@ -185,18 +210,84 @@ int main(){
         }
         case 4:{
             cout<<"--------------- Search for Vehicles Information ----------------\n";
+            do {
+                cout << "Would you like to search by plate number or ticket ID? (p/t): ";
+                cin >> user_choice;
+                if (user_choice == 'p' || user_choice == 'P') {
+                    string plate;
+                    cout << "Enter the plate number of the vehicle: ";
+                    cin >> plate;
+                    cout << endl;
+                    if (plateMap.search(plate) == "") {
+                        cout << "Plate Number: " << plate << " not found." << endl;
+                        break;
+                    } else if (plateMap.search(plate) != "") {
+                        cout << "Plate Number: " << plate << " belong to Ticket ID: " << plateMap.search(plate) << "" << endl;
+                    }
+                } else if (user_choice == 't' || user_choice == 'T'){
+                    string ticketID;
+                    cout << "Enter the TicketID of the vehicle (e.g. TC1, TB2): ";
+                    cin >> ticketID;
+                    cout << endl;
+                    if (ticketMap.search(ticketID) == "") {
+                        cout << "Ticket ID: " << ticketID << " not found." << endl;
+                        break;
+                    } else if (ticketMap.search(ticketID) != "") {
+                        cout << "Ticket ID: " << ticketID << " belong to Plate Number: " << ticketMap.search(ticketID) << "" << endl;
+                    }
+                } else {
+                    cout << "Invalid choice, please enter 'p' or 't'." << endl;
+                }
+            } while (user_choice != 'p' && user_choice != 'P' && user_choice != 't' && user_choice != 'T');
             break;
         }
         case 5:{
-            cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
-            cout<<"~~~~~~~~ CAR ZONE ~~~~~~~~~\n";
-            cout<<"Current Car: "<<list.current_car<< " ||| The Maximum Car: " <<list.max_car<<endl;
-            //display the car.csv
-            cout<<endl;
-            cout<<"~~~~~~~~ MOTOR ZONE ~~~~~~~~~\n";
-            cout<<"Current Motor: "<<list.current_motor<< " ||| The Maximum Motor: " <<list.max_motor<<endl;
-            //display the motorbike.csv
-            cout<<endl;
+            Vehicle temp[600];
+            int total = 0;
+
+            
+            for (int i = 0; i < historyCount; i++)
+            {
+                temp[total] = history[i];
+                total++;
+            }
+
+            
+            Node *curr = list.head;
+            while (curr != NULL)
+            {
+                temp[total] = curr->data;
+                total++;
+                curr = curr->next;
+            }
+
+            if (total == 0)
+            {
+                cout << "No records yet." << endl;
+                break;
+            }
+
+            cout << "\nSort by:\n";
+            cout << "1. Entry time (earliest first)\n";
+            cout << "2. Duration (longest first)\n";
+            cout << "3. Status (parked or left)\n";
+            cout << "Choose: ";
+            int sortChoice;
+            cin >> sortChoice;
+
+            if (sortChoice == 1)
+                mergeSort(temp, 0, total - 1, "entry");
+            else if (sortChoice == 2)
+                mergeSort(temp, 0, total - 1, "duration");
+            else if (sortChoice == 3)
+                mergeSort(temp, 0, total - 1, "status");
+            else
+            {
+                cout << "Invalid choice." << endl;
+                break;
+            }
+
+            displaySorted(temp, total);
             break;
         }
         case 6: {
