@@ -15,7 +15,7 @@ using namespace std;
 bool available(string type);
 bool checkPlateValidation(string plate, string type);
 bool writeIO(string vehicleType);
-bool deleteAfterUndo(string vehicleType, string ticketID);
+bool deleteVehicleFromCSV(string vehicleType, string ticketID);
 int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount);
 string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
 string getCurrentDateTime();
@@ -43,12 +43,7 @@ public:
   
 };
 
-// time_t rawtime;
-//   struct tm * timeinfo;
 
-//   time (&rawtime);
-//   timeinfo = localtime (&rawtime);
-//   printf ("Current local time and date: %s", asctime(timeinfo));
 class ParkingZone {
 public:
     int id;
@@ -171,7 +166,7 @@ int main(){
                     plateMap.remove(plateNumber);
                     ticketMap.remove(ticketID);
                     list.deleteByID(ticketID);
-
+                    
                     string leave_type = "";
                     if (ticketID[0] == 'T' && ticketID[1] == 'C') {
                         leave_type = "car";
@@ -183,11 +178,13 @@ int main(){
                         // Just in case something weird happens
                         leave_type = "unknown"; 
                     }
+                    deleteVehicleFromCSV(leave_type, ticketID);
 
                     ActionRecord log;
                     log.action_type = "Checkout";
                     log.target_vehicle.ticketID = ticketID;
                     log.target_vehicle.plateNumber = plateNumber;
+                    log.target_vehicle.vehicleType = leave_type;
                     stack.push(log);
                 
                     if(leave_type == "car" && !car_queue.isEmpty()){
@@ -209,7 +206,7 @@ int main(){
                         cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }else if(leave_type == "motor" && !bike_queue.isEmpty()){
                         Vehicle wait_motor = bike_queue.dequeue();
-                        wait_motor.ticketID = TicketID("bike",carIdTracker, bikeIdTracker);
+                        wait_motor.ticketID = TicketID("motor",carIdTracker, bikeIdTracker);
 
                         list.insertAtTheEnd(wait_motor);
                         list.writeIO(wait_motor);
@@ -225,13 +222,13 @@ int main(){
                         cout<<"Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
                         cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }
-                list.writeAllToCSV();
+                // list.writeAllToCSV();
                 } else if (ticketID != ticketIDStored || plateNumber != plateStored) {
                     cout << "Invalid ticket ID or plate number" << endl;
                 } else {
                     cout << "Something went wrong." << endl;
                 }
-                list.writeIO();
+                // list.writeIO();
             } else {
                 cout << "Cancelled Choice!";
             }
@@ -252,7 +249,7 @@ int main(){
                 list.deleteByID(v.ticketID);
                 plateMap.remove(v.plateNumber);
                 ticketMap.remove(v.ticketID);
-                deleteAfterUndo(v.vehicleType, v.ticketID);
+                deleteVehicleFromCSV(v.vehicleType, v.ticketID);
                 cout << "Deleted: " << v.plateNumber << " from the parking lot" << endl;
             }
             else if(action =="Checkout"){
@@ -307,7 +304,8 @@ int main(){
             break;
         }
         case 5:{
-             cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
+            
+            cout<<"---------------- Check Vehicle Zone Availability ----------------\n";
             cout<<"~~~~~~~~ CAR ZONE ~~~~~~~~~\n";
             cout<<"Current Car: "<<list.current_car<< " ||| The Maximum Car: " <<list.max_car<<endl;
             //display the car.csv
@@ -442,7 +440,7 @@ string TicketID(string type, int& carIdTracker, int& bikeIdTracker) {
         return "TB" + to_string(bikeIdTracker);
     }
 
-    return 0;
+    return "";
 }
 int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount) {
     ifstream file(csv);
@@ -482,7 +480,7 @@ int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount) {
     return countOldId;
 }
 //delete from csv after stack undo
-bool deleteAfterUndo(string vehicleType, string ticketID) {
+bool deleteVehicleFromCSV(string vehicleType, string ticketID) {
     string csv;
 
     if (vehicleType == "car") {
@@ -540,7 +538,7 @@ bool deleteAfterUndo(string vehicleType, string ticketID) {
     
     outFile.close();
 
-    return true;
+    return deleted;
 }
 string getCurrentDateTime() {
     time_t now = time(0);
