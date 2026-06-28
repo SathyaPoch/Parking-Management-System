@@ -16,7 +16,7 @@ bool available(string type);
 bool checkPlateValidation(string plate, string type);
 bool writeIO(string vehicleType);
 bool deleteAfterUndo(string vehicleType, string ticketID);
-int ReadOldDataFromCSV(string csv, string oldId);
+int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount);
 string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
 int carIdTracker = 0;
 int bikeIdTracker = 0;
@@ -57,8 +57,8 @@ public:
 };
 int main(){
  DoubleLinkedList list;
- carIdTracker = ReadOldDataFromCSV("src/data/cars.csv", "TC");
- bikeIdTracker = ReadOldDataFromCSV("src/data/motorbike.csv", "TB");
+ carIdTracker = ReadOldDataFromCSV("src/data/cars.csv", "TC", list.current_car);
+ bikeIdTracker = ReadOldDataFromCSV("src/data/motorbike.csv", "TB", list.current_motor);
  Stack stack;
  Queue car_queue;   // NEW: Separate line for cars
  Queue bike_queue;
@@ -394,15 +394,16 @@ string TicketID(string type, int& carIdTracker, int& bikeIdTracker) {
 
     return 0;
 }
-int ReadOldDataFromCSV(string csv, string oldId) {
+int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount) {
     ifstream file(csv);
     string header;
     int countOldId = 0;
+    vehicleCount = 0;
 
-   
     getline(file, header);
 
     while (getline(file, header)) {
+        if (header.empty()) continue;
         stringstream ss(header);
 
         string plateNumber;
@@ -413,6 +414,9 @@ int ReadOldDataFromCSV(string csv, string oldId) {
         getline(ss, ticketID, ',');
         getline(ss, vehicleType, ',');
 
+        if (plateNumber.empty() || ticketID.empty()) continue;
+        vehicleCount++; // count every valid vehicle row 
+        
         if (ticketID.length() > oldId.length()) {
             if (ticketID.find(oldId) == 0) {
                 
