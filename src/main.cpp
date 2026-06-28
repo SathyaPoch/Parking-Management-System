@@ -171,17 +171,66 @@ int main(){
                     ticketMap.remove(ticketID);
                     list.deleteByID(ticketID);
 
+                    string leave_type = "";
+                    if (ticketID[0] == 'T' && ticketID[1] == 'C') {
+                        leave_type = "car";
+                    } 
+                    else if (ticketID[0] == 'T' && ticketID[1] == 'B') {
+                        leave_type = "motor";
+                    } 
+                    else {
+                        // Just in case something weird happens
+                        leave_type = "unknown"; 
+                    }
+
                     ActionRecord log;
                     log.action_type = "Checkout";
                     log.target_vehicle.ticketID = ticketID;
                     log.target_vehicle.plateNumber = plateNumber;
                     stack.push(log);
+                
+                    if(leave_type == "car" && !car_queue.isEmpty()){
+                        Vehicle wait_car = car_queue.dequeue();
+                        wait_car.ticketID = TicketID("car",carIdTracker, bikeIdTracker);
+
+                        list.insertAtTheEnd(wait_car);
+                        list.writeIO(wait_car);
+                        plateMap.insert(wait_car.plateNumber, wait_car.ticketID);
+                        ticketMap.insert(wait_car.ticketID,wait_car.plateNumber);
+
+                        //auto record the checkin
+                        ActionRecord auto_log;
+                        auto_log.action_type = "Park";
+                        auto_log.target_vehicle = wait_car;
+                        stack.push(auto_log);
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_car.plateNumber << "has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                    }else if(leave_type == "motor" && !bike_queue.isEmpty()){
+                        Vehicle wait_motor = bike_queue.dequeue();
+                        wait_motor.ticketID = TicketID("bike",carIdTracker, bikeIdTracker);
+
+                        list.insertAtTheEnd(wait_motor);
+                        list.writeIO(wait_motor);
+                        plateMap.insert(wait_motor.plateNumber, wait_motor.ticketID);
+                        ticketMap.insert(wait_motor.ticketID,wait_motor.plateNumber);
+
+                        //auto record the checkin
+                        ActionRecord auto_log;
+                        auto_log.action_type = "Park";
+                        auto_log.target_vehicle = wait_motor;
+                        stack.push(auto_log);
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                    }
+                list.writeAllToCSV();
                 } else if (ticketID != ticketIDStored || plateNumber != plateStored) {
                     cout << "Invalid ticket ID or plate number" << endl;
                 } else {
                     cout << "Something went wrong." << endl;
                 }
-
+                list.writeIO();
             } else {
                 cout << "Cancelled Choice!";
             }
@@ -416,7 +465,7 @@ int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount) {
 
         if (plateNumber.empty() || ticketID.empty()) continue;
         vehicleCount++; // count every valid vehicle row 
-        
+
         if (ticketID.length() > oldId.length()) {
             if (ticketID.find(oldId) == 0) {
                 
