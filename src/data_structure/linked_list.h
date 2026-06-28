@@ -16,8 +16,6 @@ public:
     long entryTimestamp;
     long exitTimestamp;
 
-    static int carIdTracker;
-    static int bikeIdTracker;
 
     Vehicle() = default;
 
@@ -27,15 +25,7 @@ public:
         status = "parked";
         entryTimestamp = 0;
         exitTimestamp = 0;
-        if (type == "car") {
-            carIdTracker++;
-            ticketID = "TC" + std::to_string(carIdTracker);
-        } else if (type == "motor") {
-            bikeIdTracker++;
-            ticketID = "TB" + std::to_string(bikeIdTracker); 
-        } else {
-            std::cout << "Invalid! Only accept car and motorbike" << std::endl;
-        }
+     
     }
 };
 
@@ -72,7 +62,7 @@ public:
     }
 
     bool deleteByID(std::string ticketID);
-    void insertAtTheEnd(const Vehicle& a3);
+    bool insertAtTheEnd(const Vehicle& vehicle);
     void displayList();
     bool available(std::string type);
     bool writeIO(const Vehicle& vehicle);

@@ -3,27 +3,25 @@
 #include <fstream>
 #include <iostream>
 // TODO: add insert function (insert at the end) using double linked list
- void DoubleLinkedList::insertAtTheEnd(const Vehicle& a3){
-        Node* node = new Node(a3); 
+bool DoubleLinkedList::insertAtTheEnd(const Vehicle& vehicle) {
+    Node* node = new Node(vehicle);
 
-        if (isEmpty()) {
-            
-            head = node;
-            tail = node;
-        } else {
-          
-            tail->next = node;
-            node->prev = tail;
-            tail = node; 
-        }
-        //add the capacity
-        if (a3.vehicleType == "car") {
-            current_car++;
-        } else if (a3.vehicleType == "motor") {
-            current_motor++;
-        }
-        writeIO(a3);
-      
+    if (isEmpty()) {
+        head = node;
+        tail = node;
+    } else {
+        tail->next = node;
+        node->prev = tail;
+        tail = node;
+    }
+
+    if (vehicle.vehicleType == "car") {
+        current_car++;
+    } else if (vehicle.vehicleType == "motor") {
+        current_motor++;
+    }
+
+    return true;
 }
         
 

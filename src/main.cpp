@@ -6,15 +6,20 @@
 #include "algorithm/sorting.h"
 #include <string>
 #include <ctime>
+#include <sstream>
+#include <fstream>
 #include <time.h>
 #include <cctype>
 #include <cstdlib>
 using namespace std;
 bool available(string type);
 bool checkPlateValidation(string plate, string type);
-int Vehicle::carIdTracker = 0;
-int Vehicle::bikeIdTracker = 0;
 bool writeIO(string vehicleType);
+bool deleteAfterUndo(string vehicleType, string ticketID);
+int ReadOldDataFromCSV(string csv, string oldId);
+string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
+int carIdTracker = 0;
+int bikeIdTracker = 0;
 class Ticket {
 public:
     int ticketID;
@@ -52,6 +57,8 @@ public:
 };
 int main(){
  DoubleLinkedList list;
+ carIdTracker = ReadOldDataFromCSV("src/data/cars.csv", "TC");
+ bikeIdTracker = ReadOldDataFromCSV("src/data/motorbike.csv", "TB");
  Stack stack;
  Queue car_queue;   // NEW: Separate line for cars
  Queue bike_queue;
@@ -90,8 +97,11 @@ int main(){
             if(checkPlateValidation(plate, type)){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
+                vehicle.ticketID = TicketID(type,carIdTracker, bikeIdTracker);
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
-                list.insertAtTheEnd(vehicle);
+                if (list.insertAtTheEnd(vehicle)) {
+                    list.writeIO(vehicle);
+                }
                 plateMap.insert(vehicle.plateNumber, vehicle.ticketID);
                 ticketMap.insert(vehicle.ticketID, vehicle.plateNumber);
                 // list.writeIO(a3.vehicleType);
@@ -112,7 +122,7 @@ int main(){
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
                     car_queue.enqueue(waiting_vehicle);
-                }else if(type == "motor" || "motorbike"){
+                }else if(type == "motor"){
                     bike_queue.enqueue(waiting_vehicle);
                 }
                 cout<<type<<": "<<plate<<" has been added to the waiting line\n";
@@ -364,4 +374,117 @@ bool checkPlateValidation(string plate, string type) {
     }
 
     return true; 
+}
+
+
+string TicketID(string type, int& carIdTracker, int& bikeIdTracker) {
+    if (type == "car") {
+        carIdTracker = carIdTracker + 1;
+        return "TC" + to_string(carIdTracker);
+    } 
+    else if (type == "motor") {
+        bikeIdTracker = bikeIdTracker + 1;
+        return "TB" + to_string(bikeIdTracker);
+    }
+
+    return 0;
+}
+int ReadOldDataFromCSV(string csv, string oldId) {
+    ifstream file(csv);
+    string header;
+    int countOldId = 0;
+
+   
+    getline(file, header);
+
+    while (getline(file, header)) {
+        stringstream ss(header);
+
+        string plateNumber;
+        string ticketID;
+        string vehicleType;
+
+        getline(ss, plateNumber, ',');
+        getline(ss, ticketID, ',');
+        getline(ss, vehicleType, ',');
+
+        if (ticketID.length() > oldId.length()) {
+            if (ticketID.find(oldId) == 0) {
+                
+                string checkId = ticketID.substr(oldId.length());
+                int num = stoi(checkId);
+                if (num > countOldId) {
+                    countOldId = num;
+                }
+            }
+        }
+    }
+
+    return countOldId;
+}
+//delete from csv after stack undo
+bool deleteAfterUndo(string vehicleType, string ticketID) {
+    string csv;
+
+    if (vehicleType == "car") {
+        csv = "src/data/cars.csv";
+    } 
+    else if (vehicleType == "motor") {
+        csv = "src/data/motorbike.csv";
+    } 
+    else {
+        cout << " Invalid!";
+        return false;
+    }
+
+ 
+    ifstream file(csv);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    string fileBuffer = ""; // This will hold all the lines we want to KEEP
+    string line;
+    bool deleted = false;
+
+    if (getline(file, line)) {
+        fileBuffer += line + '\n';
+    }
+
+  
+    while (getline(file, line)) {
+        stringstream ss(line);
+
+        string plateNumber;
+        string currentTicketID;
+        string type;
+
+        getline(ss, plateNumber, ',');
+        getline(ss, currentTicketID, ',');
+        getline(ss, type, ',');
+
+        if (currentTicketID == ticketID) {
+            deleted = true;
+            continue;
+        }
+
+        fileBuffer += line + '\n';
+    }
+
+    file.close();
+
+   
+
+    // 4. Open the SAME file to WRITE. 
+    // The default behavior of ofstream (or using ios::trunc) wipes the file clean.
+    ofstream outFile(csv); 
+    if (!outFile.is_open()) {
+        return false;
+    }
+
+    outFile << fileBuffer;
+    
+    outFile.close();
+
+    return true;
 }
