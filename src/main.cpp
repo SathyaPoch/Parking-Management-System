@@ -98,6 +98,9 @@ int main(){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
                 vehicle.ticketID = TicketID(type,carIdTracker, bikeIdTracker);
+                // vehicle.entryTimestamp = time(0);
+                // vehicle.entryDateTime = getCurrentDateTime();
+                // vehicle.exitTimestamp = 0;
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 if (list.insertAtTheEnd(vehicle)) {
                     list.writeIO(vehicle);
@@ -111,6 +114,7 @@ int main(){
                 cout << " Ticket ID : " << vehicle.ticketID << "\n";
                 cout << " Type      : " << vehicle.vehicleType << "\n";
                 cout << " Plate     : " << vehicle.plateNumber << "\n";
+                cout << " Entry Time: " << vehicle.entryTimestamp << "\n";
                 cout<< "========================================\n";
                 cout << "----------------------\n" << endl;
                 ActionRecord log;
@@ -194,15 +198,16 @@ int main(){
             ActionRecord Undo = stack.pop();
             string action = Undo.action_type;
             Vehicle v = Undo.target_vehicle;
-
-            if(action =="Park"){
+            if(action == "Park"){
                 list.deleteByID(v.ticketID);
                 plateMap.remove(v.plateNumber);
                 ticketMap.remove(v.ticketID);
-                cout << "Deleted:" << v.plateNumber << " from the parking lot" << endl;
+                deleteAfterUndo(v.vehicleType, v.ticketID);
+                cout << "Deleted: " << v.plateNumber << " from the parking lot" << endl;
             }
             else if(action =="Checkout"){
                 list.insertAtTheEnd(v);
+                list.writeIO(v);
                 plateMap.insert(v.plateNumber, v.ticketID);
                 ticketMap.insert(v.ticketID, v.plateNumber);
                 cout << "Restored:" << v.plateNumber<< "to the parking lot"<< endl;
@@ -437,23 +442,22 @@ bool deleteAfterUndo(string vehicleType, string ticketID) {
         return false;
     }
 
- 
     ifstream file(csv);
     if (!file.is_open()) {
         return false;
     }
 
-    string fileBuffer = ""; // This will hold all the lines we want to KEEP
-    string line;
+    string fileBuffer = ""; 
+    string header;
     bool deleted = false;
 
-    if (getline(file, line)) {
-        fileBuffer += line + '\n';
+    if (getline(file, header)) {
+        fileBuffer += header + '\n';
     }
 
   
-    while (getline(file, line)) {
-        stringstream ss(line);
+    while (getline(file, header)) {
+        stringstream ss(header);
 
         string plateNumber;
         string currentTicketID;
@@ -468,15 +472,11 @@ bool deleteAfterUndo(string vehicleType, string ticketID) {
             continue;
         }
 
-        fileBuffer += line + '\n';
+        fileBuffer += header + '\n';
     }
 
     file.close();
 
-   
-
-    // 4. Open the SAME file to WRITE. 
-    // The default behavior of ofstream (or using ios::trunc) wipes the file clean.
     ofstream outFile(csv); 
     if (!outFile.is_open()) {
         return false;
@@ -487,4 +487,14 @@ bool deleteAfterUndo(string vehicleType, string ticketID) {
     outFile.close();
 
     return true;
+}
+string getCurrentDateTime() {
+    time_t now = time(0);
+    tm* localTime = localtime(&now);
+
+    char buffer[30];
+
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localTime);
+
+    return string(buffer);
 }
