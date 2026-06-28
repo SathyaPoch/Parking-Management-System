@@ -18,6 +18,7 @@ bool writeIO(string vehicleType);
 bool deleteAfterUndo(string vehicleType, string ticketID);
 int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount);
 string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
+string getCurrentDateTime();
 int carIdTracker = 0;
 int bikeIdTracker = 0;
 class Ticket {
@@ -98,9 +99,9 @@ int main(){
                 if(list.available(type)==true){
                 Vehicle vehicle(plate, type);
                 vehicle.ticketID = TicketID(type,carIdTracker, bikeIdTracker);
-                // vehicle.entryTimestamp = time(0);
-                // vehicle.entryDateTime = getCurrentDateTime();
-                // vehicle.exitTimestamp = 0;
+                vehicle.entryTimestamp = time(0);
+                vehicle.entryDateTime = getCurrentDateTime();
+                vehicle.exitTimestamp = 0;
                 cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
                 if (list.insertAtTheEnd(vehicle)) {
                     list.writeIO(vehicle);
@@ -114,7 +115,7 @@ int main(){
                 cout << " Ticket ID : " << vehicle.ticketID << "\n";
                 cout << " Type      : " << vehicle.vehicleType << "\n";
                 cout << " Plate     : " << vehicle.plateNumber << "\n";
-                cout << " Entry Time: " << vehicle.entryTimestamp << "\n";
+                cout << " Entry Time: " << vehicle.entryDateTime << "\n";
                 cout<< "========================================\n";
                 cout << "----------------------\n" << endl;
                 ActionRecord log;
