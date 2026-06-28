@@ -12,7 +12,7 @@ public:
     std::string ticketID;
     std::string ticketDate;
     std::string status;
-
+    std::string entryDateTime;
     long entryTimestamp;
     long exitTimestamp;
 
@@ -25,6 +25,7 @@ public:
         status = "parked";
         entryTimestamp = 0;
         exitTimestamp = 0;
+        entryDateTime = "";
      
     }
 };
