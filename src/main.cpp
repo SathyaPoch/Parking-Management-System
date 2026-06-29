@@ -20,6 +20,16 @@ int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount);
 void ReadRevenueFromCSV(long& totalCarCheckout, long& totalMotorCheckout);
 void WriteRevenueToCSV(long totalCarCheckout, long totalMotorCheckout);
 string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
+void LoadOldDataFromCSV(
+    string csv,
+    string oldId,
+    string vehicleType,
+    int& vehicleCount,
+    int& idTracker,
+    DoubleLinkedList& list,
+    HashMap& plateMap,
+    HashMap& ticketMap
+);
 string getCurrentDateTime();
 int carIdTracker = 0;
 int bikeIdTracker = 0;
@@ -55,13 +65,33 @@ public:
 };
 int main(){
  DoubleLinkedList list;
- carIdTracker = ReadOldDataFromCSV("src/data/cars.csv", "TC", list.current_car);
- bikeIdTracker = ReadOldDataFromCSV("src/data/motorbike.csv", "TB", list.current_motor);
+ HashMap plateMap;
+ HashMap ticketMap;
+
+ LoadOldDataFromCSV(
+    "src/data/cars.csv",
+    "TC",
+    "car",
+    list.current_car,
+    carIdTracker,
+    list,
+    plateMap,
+    ticketMap
+);
+
+LoadOldDataFromCSV(
+    "src/data/motorbike.csv",
+    "TB",
+    "motor",
+    list.current_motor,
+    bikeIdTracker,
+    list,
+    plateMap,
+    ticketMap
+);
  Stack stack;
  Queue car_queue;   // NEW: Separate line for cars
  Queue bike_queue;
- HashMap plateMap;
- HashMap ticketMap;
  int option = 0;
  char user_choice = 'n';
  int parking_zone = 0;
@@ -606,4 +636,67 @@ string getCurrentDateTime() {
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localTime);
 
     return string(buffer);
+}
+void LoadOldDataFromCSV(
+    string csv,
+    string oldId,
+    string vehicleType,
+    int& vehicleCount,
+    int& idTracker,
+    DoubleLinkedList& list,
+    HashMap& plateMap,
+    HashMap& ticketMap
+) {
+    ifstream file(csv);
+
+    if (!file.is_open()) {
+        cout << "Cannot open " << csv << endl;
+        return;
+    }
+
+    string line;
+    vehicleCount = 0;
+    idTracker = 0;
+
+    // Skip header
+    getline(file, line);
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+
+        string plateNumber;
+        string ticketID;
+        string type;
+
+        getline(ss, plateNumber, ',');
+        getline(ss, ticketID, ',');
+        getline(ss, type, ',');
+
+        if (plateNumber.empty() || ticketID.empty()) continue;
+
+        Vehicle vehicle(plateNumber, vehicleType);
+        vehicle.ticketID = ticketID;
+
+        list.insertAtTheEnd(vehicle);
+
+        plateMap.insert(plateNumber, ticketID);
+        ticketMap.insert(ticketID, plateNumber);
+
+        vehicleCount++;
+
+        if (ticketID.find(oldId) == 0) {
+            string numberPart = ticketID.substr(oldId.length());
+
+            if (!numberPart.empty()) {
+                int num = stoi(numberPart);
+                if (num > idTracker) {
+                    idTracker = num;
+                }
+            }
+        }
+    }
+
+    file.close();
 }

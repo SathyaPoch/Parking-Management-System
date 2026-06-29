@@ -67,6 +67,7 @@ public:
     void displayList();
     bool available(std::string type);
     bool writeIO(const Vehicle& vehicle);
+    void LoadOldDataFromCSV();
     
 };
 #endif
