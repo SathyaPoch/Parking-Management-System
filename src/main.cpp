@@ -17,6 +17,8 @@ bool checkPlateValidation(string plate, string type);
 bool writeIO(string vehicleType);
 bool deleteVehicleFromCSV(string vehicleType, string ticketID);
 int ReadOldDataFromCSV(string csv, string oldId, int& vehicleCount);
+void ReadRevenueFromCSV(long& totalCarCheckout, long& totalMotorCheckout);
+void WriteRevenueToCSV(long totalCarCheckout, long totalMotorCheckout);
 string TicketID(string type, int& carIdTracker, int& bikeIdTracker);
 string getCurrentDateTime();
 int carIdTracker = 0;
@@ -63,6 +65,9 @@ int main(){
  int option = 0;
  char user_choice = 'n';
  int parking_zone = 0;
+ long totalCarCheckout = 0;
+ long totalMotorCheckout = 0;
+ ReadRevenueFromCSV(totalCarCheckout, totalMotorCheckout);
 
  do{
     cout<< "\nWELCOME TO PARKING MANAGEMENT SYSTEM\n";
@@ -170,9 +175,13 @@ int main(){
                     string leave_type = "";
                     if (ticketID[0] == 'T' && ticketID[1] == 'C') {
                         leave_type = "car";
+                        totalCarCheckout += 1;
+                        WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout); 
                     } 
                     else if (ticketID[0] == 'T' && ticketID[1] == 'B') {
                         leave_type = "motor";
+                        totalMotorCheckout += 1;
+                        WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout);
                     } 
                     else {
                         // Just in case something weird happens
@@ -258,6 +267,12 @@ int main(){
                 plateMap.insert(v.plateNumber, v.ticketID);
                 ticketMap.insert(v.ticketID, v.plateNumber);
                 cout << "Restored:" << v.plateNumber<< "to the parking lot"<< endl;
+                if(v.vehicleType == "car"){
+                    totalCarCheckout -= 1;
+                }else if(v.vehicleType == "motor"){
+                    totalMotorCheckout -= 1;
+                }
+                WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout);
             }
             else if(action =="Wait"){
                 if(v.vehicleType == "car"){
@@ -368,6 +383,13 @@ int main(){
             break;
         }
         case 7:{
+            cout << "---------------- Revenue ----------------\n";
+            cout << "Total Car Parked from day 1: " << totalCarCheckout <<endl;
+            cout << "Total revenue for car: " << totalCarCheckout * 4000 <<endl;
+            cout << "Total Motor Parked from day 1: " << totalMotorCheckout <<endl;
+            cout << "Total revenue for motor: " << totalMotorCheckout * 2000 <<endl;
+            cout << "=========================================\n";
+            cout << "Total Revenue: " << (totalCarCheckout * 4000) + (totalMotorCheckout * 2000) << endl;
             break;
         }
         case 8:{
@@ -540,6 +562,41 @@ bool deleteVehicleFromCSV(string vehicleType, string ticketID) {
 
     return deleted;
 }
+
+void ReadRevenueFromCSV(long& totalCarCheckout, long& totalMotorCheckout) {
+    ifstream file("src/data/revenue.csv");
+
+    if (!file.is_open()) {
+        return;
+    }
+
+    string line, header;
+    getline(file, header);
+
+    while (getline(file, line)) {
+        if (line.empty()) {
+            continue;
+        }
+        stringstream ss(line);
+        string type, count;
+
+        getline(ss, type, ',');
+        getline(ss, count, ',');
+
+        if (type == "car")        totalCarCheckout  = stol(count);
+        else if (type == "motor") totalMotorCheckout = stol(count);
+    }
+    file.close();
+}
+
+void WriteRevenueToCSV(long totalCarCheckout, long totalMotorCheckout) {
+    ofstream file("src/data/revenue.csv");
+    file << "type,count\n";
+    file << "car,"   << totalCarCheckout  << "\n";
+    file << "motor," << totalMotorCheckout << "\n";
+    file.close();
+}
+
 string getCurrentDateTime() {
     time_t now = time(0);
     tm* localTime = localtime(&now);
