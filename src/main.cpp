@@ -684,7 +684,6 @@ void LoadOldDataFromCSV(
         plateMap.insert(plateNumber, ticketID);
         ticketMap.insert(ticketID, plateNumber);
 
-        vehicleCount++;
 
         if (ticketID.find(oldId) == 0) {
             string numberPart = ticketID.substr(oldId.length());
