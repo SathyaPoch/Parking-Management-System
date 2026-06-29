@@ -90,7 +90,7 @@ LoadOldDataFromCSV(
     ticketMap
 );
  Stack stack;
- Queue car_queue;   // NEW: Separate line for cars
+ Queue car_queue; 
  Queue bike_queue;
  int option = 0;
  char user_choice = 'n';
@@ -161,6 +161,7 @@ LoadOldDataFromCSV(
                     bike_queue.enqueue(waiting_vehicle);
                 }
                 cout<<type<<": "<<plate<<" has been added to the waiting line\n";
+                cout<<"------------------\n";
                 
                 ActionRecord log;
                 log.action_type = "Wait";
@@ -214,8 +215,7 @@ LoadOldDataFromCSV(
                         WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout);
                     } 
                     else {
-                        // Just in case something weird happens
-                        leave_type = "unknown"; 
+                        leave_type = "unknown";
                     }
                     deleteVehicleFromCSV(leave_type, ticketID);
 
@@ -241,7 +241,7 @@ LoadOldDataFromCSV(
                         auto_log.target_vehicle = wait_car;
                         stack.push(auto_log);
                         cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                        cout<<"Vehicle " << wait_car.plateNumber << "has left the waiting line and entered the parking lot.\n";
+                        cout<<"Vehicle " << wait_car.plateNumber << " has left the waiting line and entered the parking lot.\n";
                         cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }else if(leave_type == "motor" && !bike_queue.isEmpty()){
                         Vehicle wait_motor = bike_queue.dequeue();
@@ -257,9 +257,9 @@ LoadOldDataFromCSV(
                         auto_log.action_type = "Park";
                         auto_log.target_vehicle = wait_motor;
                         stack.push(auto_log);
-                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                        cout<<"Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
-                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_motor.plateNumber << " has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }
                 // list.writeAllToCSV();
                 } else if (ticketID != ticketIDStored || plateNumber != plateStored) {
@@ -290,9 +290,17 @@ LoadOldDataFromCSV(
                 ticketMap.remove(v.ticketID);
                 deleteVehicleFromCSV(v.vehicleType, v.ticketID);
                 cout << "Deleted: " << v.plateNumber << " from the parking lot" << endl;
+                cout<<"------------------\n";
+                if(v.vehicleType == "car"){
+                    car_queue.enqueue(v);
+                }else if(v.vehicleType == "motor"){
+                    bike_queue.enqueue(v);
+                }
+                cout << "Restored: " << v.plateNumber<< " to the waiting line"<< endl;
+                cout<<"------------------\n";
             }
             else if(action =="Checkout"){
-                list.insertAtTheEnd(v);
+                list.insertAtTheEnd(v); 
                 list.writeIO(v);
                 plateMap.insert(v.plateNumber, v.ticketID);
                 ticketMap.insert(v.ticketID, v.plateNumber);
@@ -306,15 +314,15 @@ LoadOldDataFromCSV(
             }
             else if(action =="Wait"){
                 if(v.vehicleType == "car"){
-                    car_queue.enqueue(v);
+                    car_queue.removeByID(v.ticketID);
                 }else if(v.vehicleType == "motor"){
-                    bike_queue.enqueue(v);
+                    bike_queue.removeByID(v.ticketID);
                 }
-                cout << "Restored:" << v.plateNumber<< "to the waiting line"<< endl;
+                cout << "Deleted: " << v.plateNumber<< " from the waiting line"<< endl;
+                cout<<"~~~~~~~~~~~~~~~~~~~~\n";
             }
-            cout<<"----------------------------\n";
             break;
-        }
+        }   
         case 4:{
             cout<<"--------------- Search for Vehicles Information ----------------\n";
             do {
