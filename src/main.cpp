@@ -341,11 +341,11 @@ LoadOldDataFromCSV(
             }
             else if(action =="Wait"){
                 if(v.vehicleType == "car"){
-                    car_queue.enqueue(v);
+                    car_queue.removeByID(v.ticketID);
                 }else if(v.vehicleType == "motor"){
-                    bike_queue.enqueue(v);
+                    bike_queue.removeByID(v.ticketID);
                 }
-                cout << "Restored:" << v.plateNumber<< "to the waiting line"<< endl;
+                cout << "Deleted: " << v.plateNumber<< " from the waiting line"<< endl;
             }
             cout<<"----------------------------\n";
             break;
