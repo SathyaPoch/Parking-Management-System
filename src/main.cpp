@@ -479,11 +479,11 @@ LoadOldDataFromCSV(
         {
             cout << "---------------- Revenue ----------------\n";
             cout << "Total Car Parked from day 1: " << totalCarCheckout << endl;
-            cout << "Total revenue for car: " << totalCarCheckout * 4000 << endl;
+            cout << "Total revenue for car: " << totalCarCheckout * 4000 <<" Riels" << endl;
             cout << "Total Motor Parked from day 1: " << totalMotorCheckout << endl;
-            cout << "Total revenue for motor: " << totalMotorCheckout * 2000 << endl;
+            cout << "Total revenue for motor: " << totalMotorCheckout * 2000 <<" Riels" << endl;
             cout << "=========================================\n";
-            cout << "Total Revenue: " << (totalCarCheckout * 4000) + (totalMotorCheckout * 2000) << endl;
+            cout << "Total Revenue: " << (totalCarCheckout * 4000) + (totalMotorCheckout * 2000) <<" Riels" << endl;
             break;
         }
         case 8:
