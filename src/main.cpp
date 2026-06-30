@@ -2,7 +2,7 @@
 #include "data_structure/linked_list.h"
 #include "data_structure/Stack.h"
 #include "data_structure/queue.h"
-#include "algorithm/hashmap.h"
+#include "data_structure/hashmap.h"
 #include "algorithm/sorting.h"
 #include "data_structure/history.h"
 #include <string>
