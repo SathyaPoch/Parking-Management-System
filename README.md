@@ -71,6 +71,29 @@ All data is structurally persisted within the `src/data/` directory using standa
 | `sort_meta.csv` | Stores entry timestamp metadata used for sorting |
 
 
+
+## How to Compile and Run 
+## Linux / macOS 
+From the project root folder, run: 
+g++ -std=c++17 -Isrc \
+src/main.cpp \
+src/data_structure/linked_list.cpp \
+src/data_structure/queue.cpp \
+src/data_structure/stack.cpp \
+src/data_structure/history.cpp \
+src/algorithm/hashmap.cpp \
+src/algorithm/sorting.cpp \
+-o parking_system
+ ./parking_system
+
+## Windows PowerShell 
+This project also includes run.ps1. 
+To compile and run once: 
+.\run.ps1
+
+To watch for changes and automatically rebuild: 
+.\run.ps1 -Watch
+
 Parking-Management-System/
 │
 ├── src/
@@ -103,26 +126,3 @@ Parking-Management-System/
 ├── README.md
 ├── TODO.md
 └── LICENSE
-
-## How to Compile and Run 
-## Linux / macOS 
-From the project root folder, run: 
-g++ -std=c++17 -Isrc \
-src/main.cpp \
-src/data_structure/linked_list.cpp \
-src/data_structure/queue.cpp \
-src/data_structure/stack.cpp \
-src/data_structure/history.cpp \
-src/algorithm/hashmap.cpp \
-src/algorithm/sorting.cpp \
--o parking_system
- ./parking_system
-
-## Windows PowerShell 
-This project also includes run.ps1. 
-To compile and run once: 
-.\run.ps1
-
-To watch for changes and automatically rebuild: 
-.\run.ps1 -Watch
-
