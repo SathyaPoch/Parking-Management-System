@@ -761,34 +761,64 @@ void LoadOldDataFromCSV(
     vehicleCount = 0;
     idTracker = 0;
 
-    // Skip header
     getline(file, line);
 
     while (getline(file, line))
     {
         if (line.empty())
+        {
             continue;
+        }
 
         stringstream ss(line);
 
         string plateNumber;
         string ticketID;
         string type;
+        string entryTimestampStr;
+        string entryDateTime;
 
         getline(ss, plateNumber, ',');
         getline(ss, ticketID, ',');
         getline(ss, type, ',');
 
+        getline(ss, entryTimestampStr, ',');
+        getline(ss, entryDateTime, ',');
+
         if (plateNumber.empty() || ticketID.empty())
+        {
             continue;
+        }
 
         Vehicle vehicle(plateNumber, vehicleType);
         vehicle.ticketID = ticketID;
+        vehicle.status = "parking";
+        vehicle.exitTimestamp = 0;
+
+        if (!entryTimestampStr.empty())
+        {
+            vehicle.entryTimestamp = stol(entryTimestampStr);
+        }
+        else
+        {
+            vehicle.entryTimestamp = time(0);
+        }
+
+        if (!entryDateTime.empty())
+        {
+            vehicle.entryDateTime = entryDateTime;
+        }
+        else
+        {
+            vehicle.entryDateTime = getCurrentDateTime();
+        }
 
         list.insertAtTheEnd(vehicle);
 
         plateMap.insert(plateNumber, ticketID);
         ticketMap.insert(ticketID, plateNumber);
+
+        vehicleCount++;
 
         if (ticketID.find(oldId) == 0)
         {
@@ -797,6 +827,7 @@ void LoadOldDataFromCSV(
             if (!numberPart.empty())
             {
                 int num = stoi(numberPart);
+
                 if (num > idTracker)
                 {
                     idTracker = num;

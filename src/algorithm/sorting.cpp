@@ -5,9 +5,16 @@
 using namespace std;
 
 long getDuration(const Vehicle& v) {
+    if (v.entryTimestamp <= 0) {
+        return 0;
+    }
+
     long end = v.exitTimestamp;
-    if (end == 0) end = (long)time(0);   
-    return (end - v.entryTimestamp) / 60; 
+    if (end <= 0) {
+        end = (long)time(0);
+    }
+
+    return (end - v.entryTimestamp) / 60;
 }
 
 string formatDuration(long minutes) {
