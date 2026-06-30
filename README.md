@@ -70,34 +70,39 @@ All data is structurally persisted within the `src/data/` directory using standa
 | `revenue.csv` | Stores total checkout count for revenue |
 | `sort_meta.csv` | Stores entry timestamp metadata used for sorting |
 
-Directory structure:
-└── sathyapoch-parking-management-system/
-    ├── README.md
-    ├── LICENSE
-    ├── run.ps1
-    ├── TODO.md
-    └── src/
-        ├── main.cpp
-        ├── algorithm/
-        │   ├── hashmap.cpp
-        │   ├── hashmap.h
-        │   ├── sorting.cpp
-        │   └── sorting.h
-        ├── data/
-        │   ├── cars.csv
-        │   ├── history.csv
-        │   ├── motorbike.csv
-        │   ├── revenue.csv
-        │   └── sort_meta.csv
-        └── data_structure/
-            ├── history.cpp
-            ├── history.h
-            ├── linked_list.cpp
-            ├── linked_list.h
-            ├── queue.cpp
-            ├── queue.h
-            ├── stack.cpp
-            └── Stack.h
+
+Parking-Management-System/
+│
+├── src/
+│   ├── main.cpp
+│   │
+│   ├── algorithm/
+│   │   ├── hashmap.cpp
+│   │   ├── hashmap.h
+│   │   ├── sorting.cpp
+│   │   └── sorting.h
+│   │
+│   ├── data_structure/
+│   │   ├── linked_list.cpp
+│   │   ├── linked_list.h
+│   │   ├── Stack.cpp
+│   │   ├── Stack.h
+│   │   ├── queue.cpp
+│   │   ├── queue.h
+│   │   ├── history.cpp
+│   │   └── history.h
+│   │
+│   └── data/
+│       ├── cars.csv
+│       ├── motorbike.csv
+│       ├── history.csv
+│       ├── revenue.csv
+│       └── sort_meta.csv
+│
+├── run.ps1
+├── README.md
+├── TODO.md
+└── LICENSE
 
 ## How to Compile and Run 
 ## Linux / macOS 
