@@ -34,7 +34,6 @@ void Queue::enqueue(Vehicle vehicle){
         rear = (rear + 1) % SIZE;
     }
     Q[rear] = vehicle;
-    std::cout << "Vehicle" << vehicle.plateNumber << "joinded the waiting line." <<std::endl;
 }
 
 Vehicle Queue::dequeue(){
@@ -70,4 +69,21 @@ void Queue::displayQueue(){
         std::cout<<i+1<<". "<<"Plate Number: "<<Q[i].plateNumber<<std::endl;
     }
     std::cout<<"=======================================\n";
+}
+
+bool Queue::removeByID(std::string ticketID) {
+    if (isEmpty()) {
+        return false;
+    }   
+    bool found = false;
+    int current_size = rear + 1; 
+    for (int i = 0; i < current_size; i++) {
+        Vehicle temp = dequeue(); 
+        if (temp.ticketID == ticketID) {
+            found = true; 
+        } else {
+            enqueue(temp);
+        }
+    }
+    return found;
 }

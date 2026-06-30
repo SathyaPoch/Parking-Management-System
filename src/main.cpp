@@ -79,24 +79,25 @@ int main()
         plateMap,
         ticketMap);
 
-    LoadOldDataFromCSV(
-        "src/data/motorbike.csv",
-        "TB",
-        "motor",
-        list.current_motor,
-        bikeIdTracker,
-        list,
-        plateMap,
-        ticketMap);
-    Stack stack;
-    Queue car_queue; // NEW: Separate line for cars
-    Queue bike_queue;
-    int option = 0;
-    char user_choice = 'n';
-    int parking_zone = 0;
-    long totalCarCheckout = 0;
-    long totalMotorCheckout = 0;
-    ReadRevenueFromCSV(totalCarCheckout, totalMotorCheckout);
+LoadOldDataFromCSV(
+    "src/data/motorbike.csv",
+    "TB",
+    "motor",
+    list.current_motor,
+    bikeIdTracker,
+    list,
+    plateMap,
+    ticketMap
+);
+ Stack stack;
+ Queue car_queue; 
+ Queue bike_queue;
+ int option = 0;
+ char user_choice = 'n';
+ int parking_zone = 0;
+ long totalCarCheckout = 0;
+ long totalMotorCheckout = 0;
+ ReadRevenueFromCSV(totalCarCheckout, totalMotorCheckout);
 
     do
     {
@@ -130,68 +131,56 @@ int main()
                 cout << "Enter Motor Plate Number(e.g. 1E-6806): ";
                 cin >> plate;
             }
-            if (checkPlateValidation(plate, type))
-            {
-                if (list.available(type) == true)
-                {
-                    Vehicle vehicle(plate, type);
-                    vehicle.ticketID = TicketID(type, carIdTracker, bikeIdTracker);
-                    vehicle.entryTimestamp = time(0);
-                    vehicle.entryDateTime = getCurrentDateTime();
-                    vehicle.exitTimestamp = 0;
-                    cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
-                    if (list.insertAtTheEnd(vehicle))
-                    {
-                        list.writeIO(vehicle);
-                    }
-                    plateMap.insert(vehicle.plateNumber, vehicle.ticketID);
-                    ticketMap.insert(vehicle.ticketID, vehicle.plateNumber);
-                    // list.writeIO(a3.vehicleType);
-                    list.displayList();
-                    cout << "\n--- TICKET PRINTED ---\n";
-                    cout << "========================================\n";
-                    cout << " Ticket ID : " << vehicle.ticketID << "\n";
-                    cout << " Type      : " << vehicle.vehicleType << "\n";
-                    cout << " Plate     : " << vehicle.plateNumber << "\n";
-                    cout << " Entry Time: " << vehicle.entryDateTime << "\n";
-                    cout << "========================================\n";
-                    cout << "----------------------\n"
-                         << endl;
-                    ActionRecord log;
-                    log.action_type = "Park";
-                    log.target_vehicle = vehicle;
-                    stack.push(log);
-                    saveEntryMeta(vehicle);
+            if(checkPlateValidation(plate, type)){
+                if(list.available(type)==true){
+                Vehicle vehicle(plate, type);
+                vehicle.ticketID = TicketID(type,carIdTracker, bikeIdTracker);
+                vehicle.entryTimestamp = time(0);
+                vehicle.entryDateTime = getCurrentDateTime();
+                vehicle.exitTimestamp = 0;
+                cout << "Vehicle ticket ID: " << vehicle.ticketID << endl;
+                if (list.insertAtTheEnd(vehicle)) {
+                    list.writeIO(vehicle);
                 }
-                else
-                {
-                    cout << "\n Reminder: The " << type << " parking zone is full.\n";
-                    Vehicle waiting_vehicle(plate, type);
-                    if (type == "car")
-                    {
-                        car_queue.enqueue(waiting_vehicle);
-                    }
-                    else if (type == "motor")
-                    {
-                        bike_queue.enqueue(waiting_vehicle);
-                    }
-                    cout << type << ": " << plate << " has been added to the waiting line\n";
-
-                    ActionRecord log;
-                    log.action_type = "Wait";
-                    log.target_vehicle = waiting_vehicle;
-                    stack.push(log);
-                    cout << "Do you want to view the Waitline? (y/n): ";
-                    cin >> user_choice;
-                    if (user_choice == 'y' || user_choice == 'Y')
-                    {
-                        car_queue.displayQueue();
-                        bike_queue.displayQueue();
-                    }
-                    else
-                    {
-                        break;
-                    }
+                plateMap.insert(vehicle.plateNumber, vehicle.ticketID);
+                ticketMap.insert(vehicle.ticketID, vehicle.plateNumber);
+                // list.writeIO(a3.vehicleType);
+                list.displayList();
+                cout << "\n--- TICKET PRINTED ---\n";
+                cout<< "========================================\n";
+                cout << " Ticket ID : " << vehicle.ticketID << "\n";
+                cout << " Type      : " << vehicle.vehicleType << "\n";
+                cout << " Plate     : " << vehicle.plateNumber << "\n";
+                cout << " Entry Time: " << vehicle.entryDateTime << "\n";
+                cout<< "========================================\n";
+                cout << "----------------------\n" << endl;
+                ActionRecord log;
+                log.action_type = "Park";
+                log.target_vehicle = vehicle;
+                stack.push(log);
+                }else{
+                cout << "\n Reminder: The "<< type << " parking zone is full.\n";
+                Vehicle waiting_vehicle(plate, type);
+                if(type == "car"){
+                    car_queue.enqueue(waiting_vehicle);
+                }else if(type == "motor"){
+                    bike_queue.enqueue(waiting_vehicle);
+                }
+                cout<<type<<": "<<plate<<" has been added to the waiting line\n";
+                
+                ActionRecord log;
+                log.action_type = "Wait";
+                log.target_vehicle = waiting_vehicle;
+                stack.push(log);
+                cout<<"Do you want to view the Waitline? (y/n): ";
+                cin>>user_choice;
+                if(user_choice == 'y' || user_choice == 'Y'){
+                    car_queue.displayQueue();
+                    bike_queue.displayQueue();
+                }
+                else{
+                    break;
+                }
                 }
             }
             else
@@ -236,11 +225,10 @@ int main()
                         leave_type = "motor";
                         totalMotorCheckout += 1;
                         WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout);
-                    }
-                    else
-                    {
+                    } 
+                    else {
                         // Just in case something weird happens
-                        leave_type = "unknown";
+                        leave_type = "unknown"; 
                     }
                     deleteVehicleFromCSV(leave_type, ticketID);
 
@@ -267,13 +255,10 @@ int main()
                         auto_log.action_type = "Park";
                         auto_log.target_vehicle = wait_car;
                         stack.push(auto_log);
-                        saveEntryMeta(wait_car);
-                        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                        cout << "Vehicle " << wait_car.plateNumber << "has left the waiting line and entered the parking lot.\n";
-                        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                    }
-                    else if (leave_type == "motor" && !bike_queue.isEmpty())
-                    {
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_car.plateNumber << "has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                    }else if(leave_type == "motor" && !bike_queue.isEmpty()){
                         Vehicle wait_motor = bike_queue.dequeue();
                         wait_motor.ticketID = TicketID("motor", carIdTracker, bikeIdTracker);
 
@@ -287,9 +272,9 @@ int main()
                         auto_log.action_type = "Park";
                         auto_log.target_vehicle = wait_motor;
                         stack.push(auto_log);
-                        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                        cout << "Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
-                        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }
                     // list.writeAllToCSV();
                 }
@@ -329,9 +314,16 @@ int main()
                 ticketMap.remove(v.ticketID);
                 deleteVehicleFromCSV(v.vehicleType, v.ticketID);
                 cout << "Deleted: " << v.plateNumber << " from the parking lot" << endl;
+                cout<<"------------------\n";
+                if(v.vehicleType == "car"){
+                    car_queue.enqueue(v);
+                }else if(v.vehicleType == "motor"){
+                    bike_queue.enqueue(v);
+                }
+                cout << "Restored: " << v.plateNumber<< " to the waiting line"<< endl;
+                cout<<"------------------\n";
             }
-            else if (action == "Checkout")
-            {
+            else if(action =="Checkout"){
                 list.insertAtTheEnd(v);
                 list.writeIO(v);
                 plateMap.insert(v.plateNumber, v.ticketID);
@@ -347,26 +339,20 @@ int main()
                 }
                 WriteRevenueToCSV(totalCarCheckout, totalMotorCheckout);
             }
-            else if (action == "Wait")
-            {
-                if (v.vehicleType == "car")
-                {
+            else if(action =="Wait"){
+                if(v.vehicleType == "car"){
                     car_queue.enqueue(v);
-                }
-                else if (v.vehicleType == "motor")
-                {
+                }else if(v.vehicleType == "motor"){
                     bike_queue.enqueue(v);
                 }
-                cout << "Restored:" << v.plateNumber << "to the waiting line" << endl;
+                cout << "Restored:" << v.plateNumber<< "to the waiting line"<< endl;
             }
-            cout << "----------------------------\n";
+            cout<<"----------------------------\n";
             break;
         }
-        case 4:
-        {
-            cout << "--------------- Search for Vehicles Information ----------------\n";
-            do
-            {
+        case 4:{
+            cout<<"--------------- Search for Vehicles Information ----------------\n";
+            do {
                 cout << "Would you like to search by plate number or ticket ID? (p/t): ";
                 cin >> user_choice;
                 if (user_choice == 'p' || user_choice == 'P')
