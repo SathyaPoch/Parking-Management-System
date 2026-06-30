@@ -31,7 +31,7 @@ bool DoubleLinkedList::insertAtTheEnd(const Vehicle& vehicle) {
 void DoubleLinkedList::displayList() {
     Node* node = head;
     while (node != NULL) {
-        //std::cout << "TickeyID: "<< node->data.ticketID <<"\t ||| \t " << "Vehicle Type: "<< node->data.vehicleType <<"\t ||| \t " << "Plate Number: "<<node->data.plateNumber<<std::endl;
+     
         std::cout << "Plate Number: " << node->data.plateNumber << std::endl;
         std::cout << "Ticket : " << node->data.ticketID << std::endl;
         std::cout << "Vehicle Type: " << node->data.vehicleType << std::endl;
