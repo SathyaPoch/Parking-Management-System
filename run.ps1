@@ -16,7 +16,8 @@ $sources = @(
     "$srcDir\data_structure\queue.cpp",
     "$srcDir\data_structure\stack.cpp",
     "$srcDir\algorithm\hashmap.cpp",
-    "$srcDir\algorithm\sorting.cpp"
+    "$srcDir\algorithm\sorting.cpp",
+    "$srcDir\data_structure\history.cpp"
 )
 
 function Build {

@@ -61,10 +61,10 @@ Vehicle Queue::peek_front(){
 
 void Queue::displayQueue(){
     if(isEmpty()){
-        std::cout<<"The Waiting line is empty for  "<<Q[front].vehicleType<<" \n";
-        return;    
+        return;
     }
-    std::cout<<"The Waiting Line for "<< Q[front].vehicleType <<": \n";
+    std::cout<<"\n``````````````The Waiting Line for "<< Q[front].vehicleType <<"`````````````` \n";
+    std::cout<<"\n=======================================\n";
     for(int i = front; i <= rear; i = (i + 1) % SIZE){
         std::cout<<i+1<<". "<<"Plate Number: "<<Q[i].plateNumber<<std::endl;
     }
@@ -73,6 +73,7 @@ void Queue::displayQueue(){
 
 bool Queue::removeByID(std::string ticketID) {
     if (isEmpty()) {
+        std::cout<<"The Waiting line is empty\n";
         return false;
     }   
     bool found = false;

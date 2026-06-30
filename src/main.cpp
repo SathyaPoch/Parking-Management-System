@@ -4,7 +4,7 @@
 #include "data_structure/queue.h"
 #include "algorithm/hashmap.h"
 #include "algorithm/sorting.h"
-#include "history.h"
+#include "data_structure/history.h"
 #include <string>
 #include <ctime>
 #include <sstream>
@@ -159,7 +159,7 @@ LoadOldDataFromCSV(
                 log.target_vehicle = vehicle;
                 stack.push(log);
                 }else{
-                cout << "\n Reminder: The "<< type << " parking zone is full.\n";
+                cout << "\n~~~~~~~~~~~~~~~ Reminder: The "<< type << " parking zone is full.~~~~~~~~~~~~~~~\n";
                 Vehicle waiting_vehicle(plate, type);
                 if(type == "car"){
                     car_queue.enqueue(waiting_vehicle);
@@ -177,18 +177,23 @@ LoadOldDataFromCSV(
                 if(user_choice == 'y' || user_choice == 'Y'){
                     car_queue.displayQueue();
                     bike_queue.displayQueue();
+                    cout << "\nPress any key to continue...";
+                    cin.ignore();
+                    cin.get();
                 }
                 else{
                     break;
                 }
-                }
+                break;
             }
-            else
-            {
-                cout << "Invalid plate number. Please enter the checking information again\n";
-                goto park;
-            }
-            break;
+            
+        }
+        else
+        {
+            cout << "Invalid plate number. Please enter the checking information again\n";
+            goto park;
+        }
+        break;
         }
         case 2:
         {
@@ -255,9 +260,9 @@ LoadOldDataFromCSV(
                         auto_log.action_type = "Park";
                         auto_log.target_vehicle = wait_car;
                         stack.push(auto_log);
-                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-                        cout<<"Vehicle " << wait_car.plateNumber << "has left the waiting line and entered the parking lot.\n";
-                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                        cout<<"Vehicle " << wait_car.plateNumber << " has left the waiting line and entered the parking lot.\n";
+                        cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }else if(leave_type == "motor" && !bike_queue.isEmpty()){
                         Vehicle wait_motor = bike_queue.dequeue();
                         wait_motor.ticketID = TicketID("motor", carIdTracker, bikeIdTracker);
