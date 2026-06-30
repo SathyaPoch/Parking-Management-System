@@ -1,10 +1,11 @@
 plateNumber,ticketID,vehicleType
-2D-8989,TC1,car
 2S-6767,TC2,car
 2A-6565,TC3,car
-2Q-0000,TC4,car
 2Z-1234,TC5,car
 2X-4567,TC6,car
 2Q-1111,TC7,car
 2H-8989,TC9,car
-2S-8888,TC11,car
+2Q-1234,TC12,car
+2J-1234,TC13,car
+2H-1212,TC14,car
+2S-1212,TC15,car

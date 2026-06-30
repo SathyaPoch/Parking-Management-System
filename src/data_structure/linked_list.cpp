@@ -1,5 +1,7 @@
 #include <iostream>
 #include "linked_list.h"
+#include "history.h"
+#include <ctime>
 #include <fstream>
 #include <iostream>
 // TODO: add insert function (insert at the end) using double linked list
@@ -46,6 +48,12 @@ bool DoubleLinkedList::deleteByID(std::string leaveID){
     Node* current = head;
    while(current != NULL){
     if(current->data.ticketID == leaveID){
+        Vehicle checkedOutVehicle = current->data;
+            checkedOutVehicle.exitTimestamp = (long)std::time(0); 
+            checkedOutVehicle.status = "left"; 
+            
+            HistoryLinkedList historyLogger;
+            historyLogger.appendToCSV(checkedOutVehicle);
         if(current == head && current == tail){
             head = NULL;
             tail = NULL;

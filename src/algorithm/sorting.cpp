@@ -1,92 +1,136 @@
 #include "sorting.h"
 #include <iostream>
 #include <ctime>
+
 using namespace std;
 
-long getDuration(Vehicle v) {
+long getDuration(const Vehicle& v) {
     long end = v.exitTimestamp;
-    if (end == 0) end = (long)time(0); 
-    return (end - v.entryTimestamp) / 60;
+    if (end == 0) end = (long)time(0);   
+    return (end - v.entryTimestamp) / 60; 
 }
 
-void mergeByEntry(Vehicle arr[], int left, int middle, int right) {
-    int s1 = middle - left + 1;
-    int s2 = right - middle;
-    Vehicle leftPart[300], rightPart[300];
+string formatDuration(long minutes) {
+    if (minutes < 0) minutes = 0;
 
-    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
-    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
+    long days = minutes / (60 * 24);
+    long hours = (minutes % (60 * 24)) / 60;
+    long mins = minutes % 60;
 
-    int i = 0, j = 0, k = left;
-    while (i < s1 && j < s2) {
-        if (leftPart[i].entryTimestamp <= rightPart[j].entryTimestamp)
-            arr[k++] = leftPart[i++];
-        else
-            arr[k++] = rightPart[j++];
+    string result = "";
+    if (days > 0) {
+        result += to_string(days) + "d " + to_string(hours) + "h " + to_string(mins) + "min";
+    } else if (hours > 0) {
+        result += to_string(hours) + "h " + to_string(mins) + "min";
+    } else {
+        result += to_string(mins) + "min";
     }
-    while (i < s1) arr[k++] = leftPart[i++];
-    while (j < s2) arr[k++] = rightPart[j++];
+    return result;
 }
 
-void mergeByDuration(Vehicle arr[], int left, int middle, int right) {
-    int s1 = middle - left + 1;
-    int s2 = right - middle;
-    Vehicle leftPart[300], rightPart[300];
-
-    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
-    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
-
-    int i = 0, j = 0, k = left;
-    while (i < s1 && j < s2) {
-        if (getDuration(leftPart[i]) >= getDuration(rightPart[j]))
-            arr[k++] = leftPart[i++];
-        else
-            arr[k++] = rightPart[j++];
+bool comesBefore(Node* a, Node* b, const string& mode) {
+    if (mode == "entry") {
+        // latest entry time appears first
+        return a->data.entryTimestamp >= b->data.entryTimestamp; 
+    } else if (mode == "duration") {
+        // longest duration appears first
+        return getDuration(a->data) >= getDuration(b->data); 
+    } else if (mode == "status") {
+        // "parking" vehicles appear before "left" vehicles
+        if (a->data.status == b->data.status) return true;
+        return (a->data.status == "parking");
     }
-    while (i < s1) arr[k++] = leftPart[i++];
-    while (j < s2) arr[k++] = rightPart[j++];
+    return false;
 }
 
-void mergeByStatus(Vehicle arr[], int left, int middle, int right) {
-    int s1 = middle - left + 1;
-    int s2 = right - middle;
-    Vehicle leftPart[300], rightPart[300];
-
-    for (int i = 0; i < s1; i++) leftPart[i] = arr[left + i];
-    for (int j = 0; j < s2; j++) rightPart[j] = arr[middle + 1 + j];
-
-    int i = 0, j = 0, k = left;
-    while (i < s1 && j < s2) {
-        if (leftPart[i].status <= rightPart[j].status)
-            arr[k++] = leftPart[i++];
-        else
-            arr[k++] = rightPart[j++];
+void splitList(Node* source, Node** front, Node** back) {
+    if (source == nullptr || source->next == nullptr) {
+        *front = source;
+        *back = nullptr;
+        return;
     }
-    while (i < s1) arr[k++] = leftPart[i++];
-    while (j < s2) arr[k++] = rightPart[j++];
+    Node* slow = source;
+    Node* fast = source->next;
+
+    while (fast != nullptr) {
+        fast = fast->next;
+        if (fast != nullptr) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+    *front = source;
+    *back = slow->next;
+    slow->next = nullptr;   
 }
 
-void mergeSort(Vehicle arr[], int left, int right, string mode) {
-    if (left >= right) return;
-    int middle = (left + right) / 2;
-    mergeSort(arr, left, middle, mode);
-    mergeSort(arr, middle + 1, right, mode);
+Node* merge(Node* a, Node* b, const string& mode) {
+    if (a == nullptr) return b;
+    if (b == nullptr) return a;
 
-    if (mode == "entry") mergeByEntry(arr, left, middle, right);
-    else if (mode == "duration") mergeByDuration(arr, left, middle, right);
-    else if (mode == "status") mergeByStatus(arr, left, middle, right);
+    Node* result = nullptr;
+    if (comesBefore(a, b, mode)) {
+        result = a;
+        result->next = merge(a->next, b, mode);
+        if (result->next) result->next->prev = result;
+    } else {
+        result = b;
+        result->next = merge(a, b->next, mode);
+        if (result->next) result->next->prev = result;
+    }
+    result->prev = nullptr;   
+    return result;
 }
 
-void displaySorted(Vehicle arr[], int size) {
-    cout << "\n===== SORT RESULT =====" << endl;
-    for (int i = 0; i < size; i++) {
-        long dur = getDuration(arr[i]);
-        cout << "[" << i+1 << "] " << arr[i].plateNumber << " (" << arr[i].vehicleType << ")" << endl;
-        cout << "    Status   : " << arr[i].status << endl;
-        if (dur < 60)
-            cout << "    Duration : " << dur << " min" << endl;
-        else
-            cout << "    Duration : " << dur/60 << "h " << dur%60 << "min" << endl;
-        cout << endl;
+Node* mergeSortList(Node* head, const string& mode) {
+    if (head == nullptr || head->next == nullptr) return head;
+
+    Node* front = nullptr;
+    Node* back = nullptr;
+    splitList(head, &front, &back);
+
+    front = mergeSortList(front, mode);
+    back = mergeSortList(back, mode);
+
+    Node* sorted = merge(front, back, mode);
+
+    Node* cur = sorted;
+    Node* prevNode = nullptr;
+    while (cur != nullptr) {
+        cur->prev = prevNode;
+        prevNode = cur;
+        cur = cur->next;
+    }
+    return sorted;
+}
+
+void displaySorted(Node* head, const string& vehicleType, const string& mode) {
+    cout << "\n===== SORT RESULT";
+    if (vehicleType != "all") cout << " [" << vehicleType << "]";
+    cout << " =====" << endl;
+
+    int idx = 1;
+    Node* cur = head;
+    while (cur != nullptr) {
+        bool typeMatch = (vehicleType == "all" || cur->data.vehicleType == vehicleType);
+        // entry/duration modes only make sense for vehicles still parking
+        bool statusMatch = (mode == "status") || (cur->data.status == "parking");
+
+        if (typeMatch && statusMatch) {
+            cout << "[" << idx++ << "] " << cur->data.plateNumber 
+                 << " (" << cur->data.vehicleType << ")" << endl;
+
+            if (mode == "status") {
+                cout << " Status : " << cur->data.status << endl;
+            }
+
+            long dur = getDuration(cur->data);
+            cout << " Duration : " << formatDuration(dur) << endl;
+            cout << endl;
+        }
+        cur = cur->next;
+    }
+    if (idx == 1) {
+        cout << " (No records found matching this type)" << endl;
     }
 }
