@@ -57,7 +57,7 @@ WELCOME TO PARKING MANAGEMENT SYSTEM
 7. Check Revenue
 8. Clear Page
 9. Quit
-
+```
 ## CSV Data Storage
 
 All data is structurally persisted within the `src/data/` directory using standard flat CSV layouts:
