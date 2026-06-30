@@ -145,7 +145,7 @@ LoadOldDataFromCSV(
                 plateMap.insert(vehicle.plateNumber, vehicle.ticketID);
                 ticketMap.insert(vehicle.ticketID, vehicle.plateNumber);
                 // list.writeIO(a3.vehicleType);
-                list.displayList();
+                // list.displayList();
                 cout << "\n--- TICKET PRINTED ---\n";
                 cout<< "========================================\n";
                 cout << " Ticket ID : " << vehicle.ticketID << "\n";
