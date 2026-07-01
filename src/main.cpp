@@ -281,7 +281,6 @@ LoadOldDataFromCSV(
                         cout<<"Vehicle " << wait_motor.plateNumber << "has left the waiting line and entered the parking lot.\n";
                         cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
                     }
-                    // list.writeAllToCSV();
                 }
                 else if (ticketID != ticketIDStored || plateNumber != plateStored)
                 {
@@ -291,7 +290,6 @@ LoadOldDataFromCSV(
                 {
                     cout << "Something went wrong." << endl;
                 }
-                // list.writeIO();
             }
             else
             {

@@ -35,6 +35,19 @@ ActionRecord Stack::pop(){
     return last_action;
 }
 
+void Stack::display(){
+    if(is_empty()){
+        std::cout<<"\n Stack is empty\n"<<std::endl;
+        return;
+    }
+    for(int i=top; i>=0; i--){
+        std::cout<<"\n"<<i<< ".  Plate: "<<history_arr[i].target_vehicle.plateNumber
+        <<" Ticket: "<<history_arr[i].target_vehicle.ticketID
+        <<" Type: "<<history_arr[i].target_vehicle.vehicleType
+        <<" Action: "<<history_arr[i].action_type<<std::endl;
+    }
+}
+
 ActionRecord Stack::peek(){
     if(is_empty()){
         std::cout<<"\n Stack is empty\n"<<std::endl;

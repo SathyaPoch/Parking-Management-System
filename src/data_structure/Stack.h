@@ -15,6 +15,7 @@ private:
 public: 
     Stack(); //Constructor
     void push(ActionRecord action); // push everything inside the struct 
+    void display();
     ActionRecord pop(); //remove 3 varibles 
     ActionRecord peek(); //show 3 varibles
     bool is_empty();

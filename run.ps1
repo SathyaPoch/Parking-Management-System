@@ -15,7 +15,7 @@ $sources = @(
     "$srcDir\data_structure\linked_list.cpp",
     "$srcDir\data_structure\queue.cpp",
     "$srcDir\data_structure\stack.cpp",
-    "$srcDir\algorithm\hashmap.cpp",
+    "$srcDir\data_structure\hashmap.cpp",
     "$srcDir\algorithm\sorting.cpp",
     "$srcDir\data_structure\history.cpp"
 )
